@@ -1,24 +1,25 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { ObjectType } from '@nestjs/graphql';
-import {
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { Like } from '../../like/entities/like.entity';
+import { Order } from '../../order/entities/order.entity';
+import { IsEmail, MaxLength, MinLength } from 'class-validator';
 
-enum UserRole {
+export enum UserRole {
   Client = 'client',
   Admin = 'admin',
 }
 
 @Entity()
-@ObjectType()
 export class User extends CoreEntity {
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
+  gender: string;
+
   @Column()
-  @IsString()
+  @MinLength(10)
+  @MaxLength(12)
   phoneNumber: string;
 
   @Column()
@@ -26,34 +27,34 @@ export class User extends CoreEntity {
   email: string;
 
   @Column()
-  @IsString()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
-  @IsEnum(UserRole)
   role: UserRole;
 
   @Column({ default: true })
-  @IsBoolean()
   termsOfService: boolean;
 
   @Column({ default: true })
-  @IsBoolean()
   termsOfPrivacy: boolean;
 
   @Column()
-  @IsBoolean()
   termsOfMarketing: boolean;
 
   // 예치금 넣었을 때 포인트 변환
   @Column({ default: 0 })
-  @IsNumber()
   points: number;
 
   // 개인 발급 계좌
   @Column({ nullable: true })
-  @IsString()
   accountNumber: string;
 
   // todo : 좋아요, 주문 정보 추가하기
+  @Column('simple-array', { array: true, nullable: true })
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
+
+  @Column('simple-array', { array: true, nullable: true })
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }
