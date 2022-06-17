@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 
@@ -12,6 +12,6 @@ export class AuthService {
       const { ...result } = user;
       return result;
     }
-    return new NotFoundException();
+    return null;
   }
 }
