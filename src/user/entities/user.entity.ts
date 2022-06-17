@@ -4,7 +4,6 @@ import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   Client = 'client',
@@ -13,11 +12,15 @@ export enum UserRole {
 
 @Entity()
 export class User extends CoreEntity {
-  @Column({ nullable: true })
+  // todo : 인증 받아오면 nullable 삭제
+  @Column({ nullable: true, default: 'Lex' })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 'MALE' })
   gender: string;
+
+  @Column({ nullable: true, default: '1998-05-16' })
+  birth: string;
 
   @Column({ unique: true })
   @MinLength(10)
@@ -26,11 +29,9 @@ export class User extends CoreEntity {
 
   @Column({ unique: true })
   @IsEmail()
-  @Exclude()
   email: string;
 
-  @Column()
-  @Exclude()
+  @Column({ select: false })
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
