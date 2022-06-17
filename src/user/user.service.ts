@@ -13,7 +13,7 @@ export class UserService {
     private readonly userRepository: UserRepository
   ) {}
 
-  async findUserByPhoneNumber(
+  async findUserByPhoneNumberOrEmail(
     input: CheckPhone | CheckEmail
   ): Promise<CoreOutput> {
     const user = await this.userRepository.findOne({
@@ -33,6 +33,14 @@ export class UserService {
       ok: false,
       error: 'This user is already existed',
     };
+  }
+
+  async findOneByPhoneNumber(phoneNumber: string): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({
+      where: { phoneNumber },
+      select: ['password', 'phoneNumber'],
+    });
+    return user;
   }
 
   async createUser(

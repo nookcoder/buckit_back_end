@@ -12,6 +12,8 @@ import { Project } from './project/entities/project.entity';
 import { Like } from './like/entities/like.entity';
 import { OrderModule } from './order/order.module';
 import { Order } from './order/entities/order.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles/role.guard';
 
 @Module({
   imports: [
@@ -46,6 +48,11 @@ import { Order } from './order/entities/order.entity';
     OrderModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,8 +1,10 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
+import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   Client = 'client',
@@ -17,16 +19,18 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   gender: string;
 
-  @Column()
+  @Column({ unique: true })
   @MinLength(10)
   @MaxLength(12)
   phoneNumber: string;
 
-  @Column()
+  @Column({ unique: true })
   @IsEmail()
+  @Exclude()
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
@@ -46,7 +50,7 @@ export class User extends CoreEntity {
   points: number;
 
   // 개인 발급 계좌
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   accountNumber: string;
 
   // todo : 좋아요, 주문 정보 추가하기
@@ -57,4 +61,11 @@ export class User extends CoreEntity {
   @Column('simple-array', { array: true, nullable: true })
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+    return;
+  }
 }
