@@ -28,6 +28,7 @@ import { RolesGuard } from './auth/roles/role.guard';
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
+        SECRET_KEY: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
