@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
@@ -12,10 +11,7 @@ import { CheckEmail, CheckPhone } from './dto/check-exist-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: UserRepository
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async findUserByPhoneNumberOrEmail(
     input: CheckPhone | CheckEmail
@@ -67,14 +63,26 @@ export class UserService {
       const newUser = await this.userRepository.save(
         await this.userRepository.create(createUserInput)
       );
+      // todo : 삭제
       console.log(newUser);
-      return;
+      return {
+        ok: true,
+      };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: e,
       };
+    }
+  }
+
+  async getAllUser(): Promise<User[] | InternalServerErrorException> {
+    try {
+      const users = await this.userRepository.find({ order: { id: 'ASC' } });
+      return users;
+    } catch (e) {
+      console.log(e);
+      return new InternalServerErrorException();
     }
   }
 }
