@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Post,
   Request,
   UseGuards,
@@ -11,10 +12,18 @@ import { CoreOutput } from '../common/dto/core-output.dto';
 import { CreateUserInput } from './dto/create-user.dto';
 import { CheckEmail, CheckPhone } from './dto/check-exist-user.dto';
 import { JwtAuthGuard } from '../auth/passport/jwt/jwt-auth.guard';
+import { User } from './entities/user.entity';
 
 @Controller('api/v1/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get()
+  async getAllUser(): Promise<
+    User[] | undefined | InternalServerErrorException
+  > {
+    return await this.userService.getAllUser();
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')

@@ -13,6 +13,7 @@ import { UserRepository } from '../user/user.repository';
   imports: [
     PassportModule,
     UserModule,
+    UserRepository,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -21,13 +22,7 @@ import { UserRepository } from '../user/user.repository';
       }),
     }),
   ],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtModule,
-    JwtStrategy,
-    UserRepository,
-  ],
+  providers: [AuthService, LocalStrategy, JwtModule, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

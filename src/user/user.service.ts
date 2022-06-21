@@ -8,10 +8,14 @@ import { CreateUserInput } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { CheckEmail, CheckPhone } from './dto/check-exist-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: UserRepository
+  ) {}
 
   async findUserByPhoneNumberOrEmail(
     input: CheckPhone | CheckEmail
@@ -76,7 +80,9 @@ export class UserService {
     }
   }
 
-  async getAllUser(): Promise<User[] | InternalServerErrorException> {
+  async getAllUser(): Promise<
+    User[] | undefined | InternalServerErrorException
+  > {
     try {
       const users = await this.userRepository.find({ order: { id: 'ASC' } });
       return users;

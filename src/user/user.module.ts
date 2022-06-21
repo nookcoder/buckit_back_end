@@ -8,9 +8,9 @@ import { Order } from '../order/entities/order.entity';
 import { UserRepository } from './user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Like, Order, UserRepository])],
-  providers: [UserService],
+  imports: [TypeOrmModule.forFeature([User, Like, Order]), UserRepository],
+  providers: [UserService, UserRepository],
   controllers: [UserController],
-  exports: [UserService],
+  exports: [UserService, UserRepository],
 })
 export class UserModule {}
