@@ -14,15 +14,16 @@ import { OrderModule } from './order/order.module';
 import { Order } from './order/entities/order.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      ignoreEnvFile: process.env.NODE_ENV === 'production',
+      ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'production', 'test').required(),
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USER: Joi.string().required(),
@@ -48,7 +49,7 @@ import { RolesGuard } from './auth/roles/role.guard';
     AuthModule,
     OrderModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
