@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
+import { UsersModule } from './user/users.module';
 import { CommonModule } from './common/common.module';
 import { User } from './user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
@@ -42,7 +42,7 @@ import { AppController } from './app.controller';
       entities: [User, Project, Like, Order],
       synchronize: true,
     }),
-    UserModule,
+    UsersModule,
     CommonModule,
     ProjectModule,
     LikeModule,

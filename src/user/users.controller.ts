@@ -61,6 +61,10 @@ export class UsersController {
   }
 
   /** POST **/
+  /**
+   * Create a new user
+   * @param createUserInput
+   */
   @Post()
   async createNewUser(
     @Body() createUserInput: CreateUserInput
@@ -68,6 +72,11 @@ export class UsersController {
     return await this.userService.createUser(createUserInput);
   }
 
+  /**
+   * Update Password
+   * @param id
+   * @param input
+   */
   @Post('/:userId/password')
   async updatePassword(
     @Param('userId') id,
