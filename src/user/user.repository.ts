@@ -10,4 +10,12 @@ export class UserRepository extends Repository<User> {
     });
     return user;
   }
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    const userRepository = getConnection().getRepository(User);
+    const user = await userRepository.findOne({
+      where: { email },
+      select: ['id'],
+    });
+    return user;
+  }
 }

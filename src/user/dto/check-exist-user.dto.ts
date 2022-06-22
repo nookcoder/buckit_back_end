@@ -1,6 +1,11 @@
-import { PickType } from '@nestjs/swagger';
-import { User } from '../entities/user.entity';
+import { CoreOutput } from '../../common/dto/core-output.dto';
 
-export class CheckPhone extends PickType(User, ['phoneNumber']) {}
+export class CheckExistenceInput {
+  phoneNumber?: string;
+  email?: string;
+}
 
-export class CheckEmail extends PickType(User, ['email']) {}
+export class CheckExistenceOutput extends CoreOutput {
+  existence?: boolean;
+  userId?: number;
+}

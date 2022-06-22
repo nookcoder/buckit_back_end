@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UsersService } from '../user/users.service';
 import * as bcrypt from 'bcrypt';
 import { LoginInput } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -8,7 +8,7 @@ import { UserRepository } from '../user/user.repository';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository
   ) {}
@@ -23,8 +23,10 @@ export class AuthService {
   }
 
   async login(input: LoginInput) {
-    const user = await this.userService.findOneByPhoneNumber(input.phoneNumber);
-    const payloads = { userId: user.id };
+    const user = await this.userRepository.findOneByPhoneNumber(
+      input.phoneNumber
+    );
+    const payloads = { userId: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payloads),
     };
