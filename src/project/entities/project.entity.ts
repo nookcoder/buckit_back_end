@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 
 enum ProjectStatus {
+  Before = 'before',
   PROGRESS = 'progress',
   END = 'end',
 }
@@ -35,15 +36,14 @@ export class Project extends CoreEntity {
   @IsString()
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   thumbnailImage: string;
 
   @Column()
-  @IsDate()
   deadline: Date;
 
-  @Column({ type: 'enum', enum: ProjectStatus })
+  @Column({ type: 'enum', enum: ProjectStatus, default: 'before' })
   @IsEnum(ProjectStatus)
   status: ProjectStatus;
 
@@ -57,7 +57,7 @@ export class Project extends CoreEntity {
   @IsNumber()
   totalQuarter: number;
 
-  @Column()
+  @Column({ default: 0 })
   @IsNumber()
   soldQuarter: number;
 
@@ -76,7 +76,12 @@ export class Project extends CoreEntity {
   likes: Like[];
 
   // //todo : 주문 테이블, 좋아요, 카테고리
-  @Column('simple-array', { array: true, nullable: true })
+  @Column('simple-array', { array: true, default: [], nullable: true })
   @OneToMany(() => Order, (order) => order.project)
   orders: Order[];
+
+  @BeforeInsert()
+  async calculateQuarter() {
+    this.totalQuarter = this.total / this.pricePerQuarter;
+  }
 }
