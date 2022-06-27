@@ -56,11 +56,11 @@ export class User extends CoreEntity {
 
   // todo : 좋아요, 주문 정보 추가하기
   @Column('simple-array', { array: true, nullable: true })
-  @OneToMany(() => Like, (like) => like.user)
+  @OneToMany(() => Like, (like) => like.user, { onDelete: 'CASCADE' })
   likes: Like[];
 
   @Column('simple-array', { array: true, nullable: true })
-  @OneToMany(() => Order, (order) => order.user)
+  @OneToMany(() => Order, (order) => order.user, { onDelete: 'CASCADE' })
   orders: Order[];
 
   @BeforeInsert()

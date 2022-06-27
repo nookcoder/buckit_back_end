@@ -1,18 +1,16 @@
-import { Module } from '@nestjs/common';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 
-enum ProjectStatus {
+export enum ProjectStatus {
   Before = 'before',
   PROGRESS = 'progress',
   END = 'end',
 }
 
 @Entity()
-@Module({})
 export class Project extends CoreEntity {
   @Column()
   @IsString()
@@ -72,15 +70,16 @@ export class Project extends CoreEntity {
   expectedProfit: number;
 
   @Column('simple-array', { array: true, default: [] })
-  @OneToMany(() => Like, (like) => like.project)
+  @OneToMany(() => Like, (like) => like.project, { onDelete: 'CASCADE' })
   likes: Like[];
 
   // //todo : 주문 테이블, 좋아요, 카테고리
   @Column('simple-array', { array: true, default: [], nullable: true })
-  @OneToMany(() => Order, (order) => order.project)
+  @OneToMany(() => Order, (order) => order.project, { onDelete: 'CASCADE' })
   orders: Order[];
 
   @BeforeInsert()
+  @BeforeUpdate()
   async calculateQuarter() {
     this.totalQuarter = this.total / this.pricePerQuarter;
   }
