@@ -17,6 +17,7 @@ import {
   NotFoundEntity,
   ResponseAndPrintError,
 } from '../common/utils/error-message';
+import { CoreOutput } from '../common/dto/core-output.dto';
 
 @Injectable()
 export class ProjectService {
@@ -133,6 +134,20 @@ export class ProjectService {
       };
     } catch (e) {
       ResponseAndPrintError(e);
+    }
+  }
+
+  async deleteProject(projectId: number): Promise<CoreOutput> {
+    try {
+      await this.projectRepository.delete(projectId);
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: e,
+      };
     }
   }
 

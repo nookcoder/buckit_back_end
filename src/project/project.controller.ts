@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import {
   CreateProjectInput,
@@ -44,6 +44,8 @@ export class ProjectController {
     return await this.projectService.updateProject(projectId, input);
   }
 
-  // @Delete()
-  // async deleteProject() {}
+  @Delete('/:projectId')
+  async deleteProject(@Param('projectId') projectId) {
+    return await this.projectService.deleteProject(projectId);
+  }
 }
