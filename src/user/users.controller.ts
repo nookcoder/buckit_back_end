@@ -12,7 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { CreateUserInput } from './dto/create-user.dto';
-import { JwtAuthGuard } from '../auth/passport/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { User } from './entities/user.entity';
 import { CheckExistenceOutput } from './dto/check-exist-user.dto';
 import {

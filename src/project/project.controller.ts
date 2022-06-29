@@ -7,6 +7,7 @@ import {
 import { Project } from './entities/project.entity';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { UpdateProjectInput } from './dto/update-project.dto';
+import { Roles } from '../auth/roles/roles.decorator';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -27,15 +28,19 @@ export class ProjectController {
    * @param input
    */
 
-  // todo: 쿼터 당 가격으로 총 쿼터 수 추가
-  // todo: 타입 검증 추가
   @Post()
+  @Roles('admin')
   async createProject(
     @Body() input: CreateProjectInput
   ): Promise<CreateProjectOutput> {
     return await this.projectService.createProject(input);
   }
 
+  /**
+   * Project 정보 및 상태 업데이트
+   * @param projectId
+   * @param input
+   */
   @Post('/:projectId')
   async updateProject(
     @Param('projectId') projectId,

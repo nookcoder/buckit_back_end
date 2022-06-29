@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../user/users.service';
 import * as bcrypt from 'bcrypt';
-import { LoginInput } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../user/user.repository';
 
@@ -22,11 +21,8 @@ export class AuthService {
     return null;
   }
 
-  async login(input: LoginInput) {
-    const user = await this.userRepository.findOneByPhoneNumber(
-      input.phoneNumber
-    );
-    const payloads = { userId: user.id, role: user.role };
+  async login(req: any) {
+    const payloads = { userId: req.user.id, role: req.user.role };
     return {
       access_token: this.jwtService.sign(payloads),
     };

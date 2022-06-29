@@ -6,7 +6,7 @@ export class UserRepository extends Repository<User> {
     const userRepository = getConnection().getRepository(User);
     const user = await userRepository.findOne({
       where: { phoneNumber },
-      select: ['password', 'phoneNumber', 'id'],
+      select: ['password', 'phoneNumber', 'id', 'role'],
     });
     return user;
   }
