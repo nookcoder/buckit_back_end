@@ -13,12 +13,13 @@ import { UsersService } from './users.service';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { CreateUserInput } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { CheckExistenceOutput } from './dto/check-exist-user.dto';
 import {
   UpdatePasswordInput,
   UpdatePasswordOutput,
 } from './dto/update-password.dto';
+import { Roles } from '../auth/roles/roles.decorator';
 
 @Controller('api/v1/users')
 export class UsersController {
@@ -26,6 +27,7 @@ export class UsersController {
 
   /** GET **/
   @Get()
+  @Roles(UserRole.Admin)
   async getAllUser(): Promise<
     User[] | undefined | InternalServerErrorException
   > {
@@ -53,7 +55,7 @@ export class UsersController {
    * @Query key : phoneNumber, email
    */
   @Get('/check')
-  async isExistedUser(@Query() query): Promise<CheckExistenceOutput> {
+  async checkDuplicate(@Query() query): Promise<CheckExistenceOutput> {
     const phoneNumber = query['phoneNumber'];
     const email = query['email'];
     if (!phoneNumber && !email) {

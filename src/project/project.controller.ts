@@ -8,6 +8,7 @@ import { Project } from './entities/project.entity';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { UpdateProjectInput } from './dto/update-project.dto';
 import { Roles } from '../auth/roles/roles.decorator';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -29,7 +30,7 @@ export class ProjectController {
    */
 
   @Post()
-  @Roles('admin')
+  @Roles(UserRole.Admin)
   async createProject(
     @Body() input: CreateProjectInput
   ): Promise<CreateProjectOutput> {
@@ -50,6 +51,7 @@ export class ProjectController {
   }
 
   @Delete('/:projectId')
+  @Roles(UserRole.Admin)
   async deleteProject(@Param('projectId') projectId) {
     return await this.projectService.deleteProject(projectId);
   }
