@@ -1,4 +1,11 @@
-import { Controller, Param, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { LikeService } from './like.service';
 import { JwtAuthGuard } from '../auth/passport/jwt/jwt-auth.guard';
 
@@ -6,10 +13,19 @@ import { JwtAuthGuard } from '../auth/passport/jwt/jwt-auth.guard';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post('/:projectId')
   @UseGuards(JwtAuthGuard)
+  @Post('/:projectId')
   async createLike(@Request() req, @Param('projectId') projectId) {
     return await this.likeService.createLike({
+      userId: req.user.userId,
+      projectId: projectId,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:projectId')
+  async deleteLike(@Request() req, @Param('projectId') projectId) {
+    return await this.likeService.deleteLike({
       userId: req.user.userId,
       projectId: projectId,
     });
