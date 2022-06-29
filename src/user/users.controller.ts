@@ -42,6 +42,11 @@ export class UsersController {
     return await this.userService.getProfileById(req.user.userId);
   }
 
+  @Get('/likes/:userId')
+  async getLikes(@Param('userId') userId) {
+    return await this.userService.getLikes(userId);
+  }
+
   /**
    * 해당 정보의 유저가 존재하는 지 확인
    * 있으면 return true, 없으면 return false,

@@ -17,14 +17,48 @@ import {
   UpdatePasswordInput,
   UpdatePasswordOutput,
 } from './dto/update-password.dto';
+import { Like } from '../like/entities/like.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Like)
+    private readonly likeRepository: Repository<Like>,
     private readonly userCustomRepository: UserRepository
   ) {}
+
+  async getAllUser(): Promise<
+    User[] | undefined | InternalServerErrorException
+  > {
+    try {
+      return await this.userRepository.find({ order: { id: 'ASC' } });
+    } catch (e) {
+      console.log(e);
+      return new InternalServerErrorException();
+    }
+  }
+
+  async getProfileById(userId: number): Promise<User | NotFoundException> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (user) {
+        return user;
+      }
+      return new NotFoundException();
+    } catch (e) {
+      console.log(e);
+      return new InternalServerErrorException();
+    }
+  }
+
+  async getLikes(userId: number) {
+    return this.likeRepository.find({
+      where: { userId: userId },
+      relations: ['project'],
+    });
+  }
 
   async updatePassword({
     password,
@@ -89,19 +123,6 @@ export class UsersService {
     };
   }
 
-  async getProfileById(userId: number): Promise<User | NotFoundException> {
-    try {
-      const user = await this.userRepository.findOne({ where: { id: userId } });
-      if (user) {
-        return user;
-      }
-      return new NotFoundException();
-    } catch (e) {
-      console.log(e);
-      return new InternalServerErrorException();
-    }
-  }
-
   async createUser(
     createUserInput: CreateUserInput
   ): Promise<void | CoreOutput> {
@@ -117,18 +138,6 @@ export class UsersService {
         ok: false,
         error: e,
       };
-    }
-  }
-
-  async getAllUser(): Promise<
-    User[] | undefined | InternalServerErrorException
-  > {
-    try {
-      const users = await this.userRepository.find({ order: { id: 'ASC' } });
-      return users;
-    } catch (e) {
-      console.log(e);
-      return new InternalServerErrorException();
     }
   }
 }

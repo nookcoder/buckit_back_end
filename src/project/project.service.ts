@@ -28,7 +28,9 @@ export class ProjectService {
 
   async getAllProjects(): Promise<Project[] | GetAllProjectsOutput> {
     try {
-      const projects = await this.projectRepository.find();
+      const projects = await this.projectRepository.find({
+        relations: ['likes'],
+      });
       if (projects) {
         return {
           projects,
@@ -48,6 +50,7 @@ export class ProjectService {
     try {
       const project = await this.projectRepository.findOne({
         where: { id: projectId },
+        relations: ['likes'],
       });
       if (!project) {
         NotFoundEntity();

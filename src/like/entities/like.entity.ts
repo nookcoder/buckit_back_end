@@ -1,19 +1,17 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Entity, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Project } from '../../project/entities/project.entity';
 
 @Entity()
 export class Like extends CoreEntity {
-  @ManyToOne(() => Project, (project) => project.likes)
+  @ManyToOne(() => Project, (project) => project.likes, { onDelete: 'CASCADE' })
   project: Project;
 
-  @RelationId((like: Like) => like.project)
+  @Column()
   projectId: number;
 
-  @ManyToOne(() => User, (user) => user.likes)
-  user: User;
-
-  @RelationId((like: Like) => like.user)
+  @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
+  @Column()
   userId: number;
 }

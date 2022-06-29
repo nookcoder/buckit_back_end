@@ -69,13 +69,11 @@ export class Project extends CoreEntity {
   @IsNumber()
   expectedProfit: number;
 
-  @Column('simple-array', { array: true, default: [] })
-  @OneToMany(() => Like, (like) => like.project, { onDelete: 'CASCADE' })
+  @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
   // //todo : 주문 테이블, 좋아요, 카테고리
-  @Column('simple-array', { array: true, default: [], nullable: true })
-  @OneToMany(() => Order, (order) => order.project, { onDelete: 'CASCADE' })
+  @OneToMany(() => Order, (order) => order.project, { nullable: true })
   orders: Order[];
 
   @BeforeInsert()
