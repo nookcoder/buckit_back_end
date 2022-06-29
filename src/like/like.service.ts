@@ -19,11 +19,11 @@ export class LikeService {
 
   async createLike(input: CreateLikeInput) {
     const project = await this.projectRepository.findOne({
-      where: { id: +input.projectId },
+      where: { id: input.projectId },
       relations: ['likes'],
     });
     const user = await this.userRepository.findOne({
-      where: { id: +input.userId },
+      where: { id: input.userId },
       relations: ['likes'],
     });
 
