@@ -42,7 +42,10 @@ export class UsersService {
 
   async getProfileById(userId: number): Promise<User | NotFoundException> {
     try {
-      const user = await this.userRepository.findOne({ where: { id: userId } });
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['likes'],
+      });
       if (user) {
         return user;
       }
