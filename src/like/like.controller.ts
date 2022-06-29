@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { JwtAuthGuard } from '../auth/passport/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('api/v1/like')
 export class LikeController {
