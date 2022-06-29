@@ -15,6 +15,7 @@ import { Order } from './order/entities/order.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { AppController } from './app.controller';
   ],
   controllers: [AppController],
   providers: [
+    JwtService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,

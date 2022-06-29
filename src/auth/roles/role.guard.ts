@@ -1,13 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  private reflector: Reflector;
-  constructor() {
-    this.reflector = new Reflector();
-  }
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly reflector: Reflector
+  ) {}
   canActivate(
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -16,7 +17,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    console.log(request);
+    console.log(request.headers['authorization']);
     return true;
   }
 }

@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { RolesGuard } from './auth/roles/role.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +19,7 @@ async function bootstrap() {
       transform: true,
     })
   );
-  app.useGlobalGuards(new RolesGuard());
+  app.useGlobalGuards(new RolesGuard(new JwtService(), new Reflector()));
   app.enableCors();
   await app.listen(3000);
 }
