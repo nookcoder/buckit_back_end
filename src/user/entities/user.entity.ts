@@ -54,7 +54,6 @@ export class User extends CoreEntity {
   @Column({ nullable: true, unique: true })
   accountNumber: string;
 
-  // todo : 좋아요, 주문 정보 추가하기
   @OneToMany(() => Like, (like) => like.userId, { nullable: true })
   likes: Like[];
 
@@ -67,4 +66,7 @@ export class User extends CoreEntity {
     this.password = await bcrypt.hash(this.password, 10);
     return;
   }
+
+  // todo : Refresh token 저장할 Column 추가 및 @Exclude 추가
+  // todo : Refresh token Hash화 하기, Logout 시 Refresh Token 삭제
 }

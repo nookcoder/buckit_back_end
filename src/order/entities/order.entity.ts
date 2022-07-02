@@ -15,6 +15,7 @@ enum OrderStatus {
   PaymentCompleted = 'paymentCompleted',
 }
 
+// todo : 3시간 내에 입금됐는 지 확인하기
 @Entity()
 export class Order extends CoreEntity {
   @ManyToOne(() => User, (user) => user.orders)

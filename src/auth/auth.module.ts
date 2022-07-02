@@ -18,7 +18,7 @@ import { UserRepository } from '../user/user.repository';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('SECRET_KEY'),
-        signOptions: { expiresIn: '1d' },
+        signOptions: { expiresIn: '20s' },
       }),
     }),
   ],

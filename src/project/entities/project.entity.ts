@@ -72,7 +72,7 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  // //todo : 주문 테이블, 좋아요, 카테고리
+  // //todo : 카테고리
   @OneToMany(() => Order, (order) => order.project, { nullable: true })
   orders: Order[];
 
