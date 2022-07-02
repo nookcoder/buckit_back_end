@@ -40,6 +40,7 @@ ENV SECRET_KEY=941D897597EA5
 
 EXPOSE 3000
 
+
 # Define the command to run my app using CMD which defines your runtime
 CMD ["npm", "run", "start:prod"]
 
