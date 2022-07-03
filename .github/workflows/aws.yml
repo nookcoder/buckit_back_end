@@ -36,7 +36,7 @@ env:
   ECR_REPOSITORY: buckit-prod           # set this to your Amazon ECR repository name
   ECS_SERVICE: buckit-prod-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: buckit-prod-cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: buckit-prod-task-definition  # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: /ecs/buckit-prod-task-definition  # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
@@ -83,7 +83,8 @@ jobs:
 #      id: download-task-definition
 #      run: |
 #        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
-
+    - name: List files
+      run: ls -R
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
