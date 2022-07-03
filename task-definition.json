@@ -9,7 +9,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/buckit-prod-task-definition",
+          "awslogs-group": "/ecs/buckit-prod",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -59,13 +59,13 @@
   ],
   "placementConstraints": [],
   "memory": "512",
-  "taskRoleArn": null,
+  "taskRoleArn": "arn:aws:iam::922929577417:role/ecsTaskExecutionRole",
   "compatibilities": [
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod-task-definition:1",
-  "family": "buckit-prod-task-definition",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod:1",
+  "family": "buckit-prod",
   "requiresAttributes": [
     {
       "targetId": null,
@@ -95,6 +95,12 @@
       "targetId": null,
       "targetType": null,
       "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
       "name": "ecs.capability.execution-role-ecr-pull"
     },
     {
@@ -115,10 +121,7 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "runtimePlatform": {
-    "operatingSystemFamily": "LINUX",
-    "cpuArchitecture": null
-  },
+  "runtimePlatform": null,
   "cpu": "256",
   "revision": 1,
   "status": "ACTIVE",
