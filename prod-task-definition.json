@@ -9,7 +9,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/buckit-prod",
+          "awslogs-group": "/ecs/buckit-prod-task-definition",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -64,8 +64,8 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod:1",
-  "family": "buckit-prod",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod-task-definition:2",
+  "family": "buckit-prod-task-definition",
   "requiresAttributes": [
     {
       "targetId": null,
@@ -123,7 +123,7 @@
   "networkMode": "awsvpc",
   "runtimePlatform": null,
   "cpu": "256",
-  "revision": 1,
+  "revision": 2,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,

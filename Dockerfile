@@ -33,7 +33,7 @@ COPY --from=build /app/dist ./dist
 
 ENV DB_HOST=buckit-test.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com
 ENV DB_PORT=5432
-ENV DB_USER=postgres
+ENV DB_USER=buckit
 ENV DB_PASSWORD=buckit8080
 ENV DB_DATABASE=buckit
 ENV SECRET_KEY=941D897597EA5

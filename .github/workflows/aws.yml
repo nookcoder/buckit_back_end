@@ -36,8 +36,8 @@ env:
   ECR_REPOSITORY: buckit-prod           # set this to your Amazon ECR repository name
   ECS_SERVICE: buckit-prod-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: buckit-prod-cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ./task-definition.json  # set this to the path to your Amazon ECS task definition
-                                               # file, e.g. .aws/task-definition.json
+  ECS_TASK_DEFINITION: ./prod-task-definition.json  # set this to the path to your Amazon ECS task definition
+                                               # file, e.g. .aws/prod-task-definition.json
   CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
@@ -82,7 +82,7 @@ jobs:
 #    - name: Download task definition
 #      id: download-task-definition
 #      run: |
-#        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+#        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > prod-task-definition.json
     - name: List files
       run: ls -R
 
