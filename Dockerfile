@@ -30,6 +30,14 @@ RUN npm install --only=production
 
 COPY --from=build /app/dist ./dist
 
+
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_DATABASE=${DB_DATABASE}
+ENV SECRET_KEY=${SECRET_KEY}
+
 EXPOSE 3000
 
 
