@@ -53,6 +53,11 @@ ENV DB_PASSWORD=$DB_PASSWORD
 ENV DB_DATABASE=$DB_DATABASE
 ENV SECRET_KEY=$SECRET_KEY
 
+RUN printf $DB_HOST
+RUN printf $DB_PORT
+RUN printf $DB_USER
+RUN printf $DB_PASSWORD
+
 RUN npm install --only=production
 
 COPY --from=build /app/dist ./dist
