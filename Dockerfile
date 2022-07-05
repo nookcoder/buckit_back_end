@@ -29,8 +29,6 @@ ENV DB_PASSWORD=$DB_PASSWORD
 ENV DB_DATABASE=$DB_DATABASE
 ENV SECRET_KEY=$SECRET_KEY
 
-
-
 RUN npm run build
 
 
@@ -41,8 +39,6 @@ FROM node:16-alpine as production
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN cat '/run/secrets/DB_HOST'
 
 RUN npm install --only=production
 

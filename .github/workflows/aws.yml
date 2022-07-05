@@ -82,7 +82,14 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         export DB_HOST=${{ env.DB_HOST }}
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg DB_HOST=$DB_HOST --build-arg DB_PASSWORD=$DB_PASSWORD --build-arg DB_PORT=$DB_PORT --build-arg DB_USER=$DB_USER --build-arg DB_PASSWORD=$DB_PASSWORD --build-arg DB_DATABASE=$DB_DATABASE --build-arg SECRET_KEY=$SECRET_KEY
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . \ 
+        --build-arg DB_HOST=$DB_HOST\
+        --build-arg DB_PASSWORD=$DB_PASSWORD\
+        --build-arg DB_PORT=$DB_PORT\
+        --build-arg DB_USER=$DB_USER\
+        --build-arg DB_PASSWORD=$DB_PASSWORD\
+        --build-arg DB_DATABASE=$DB_DATABASE\
+        --build-arg SECRET_KEY=$SECRET_KEY
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
