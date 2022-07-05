@@ -21,6 +21,7 @@ async function bootstrap() {
   );
   app.useGlobalGuards(new RolesGuard(new JwtService(), new Reflector()));
   app.enableCors();
+  console.log(process.env.DB_HOST);
   await app.listen(3000);
 }
 bootstrap();
