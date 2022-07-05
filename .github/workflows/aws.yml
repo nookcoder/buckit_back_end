@@ -83,6 +83,7 @@ jobs:
         docker swarm init
         echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
         docker secret ls
+        cat /run/secrets/DB_HOST
         DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret DB_HOST
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
