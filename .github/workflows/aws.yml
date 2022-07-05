@@ -80,7 +80,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret id=DB_HOST,src=$secret.DB_HOST
+        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret id=DB_HOST,src=$secret.DB_HOST --secret id=DB_PASSWORD,src=$secret.DB_PASSWORD --secret id=DB_DATABASE,src=$secret.DB_DATABASE --secret id=DB_PORT,src=$secret.DB_PORT --secret id=DB_USER,src=$secret.DB_USER --secret id=SECRET_KEY,src=$secret.SECRET_KEY
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
