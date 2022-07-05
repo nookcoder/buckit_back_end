@@ -81,9 +81,7 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         docker swarm init
-        echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST=${{ secrets.DB_HOST }} 
-        docker secret ls
-        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret DB_HOST
+        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret DB_HOST=$DB_HOST
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
