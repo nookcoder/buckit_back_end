@@ -80,6 +80,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
+        docker swarm init
         echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
         echo "${{ secrets.DB_PASSWORD }}" | docker secret create DB_PASSWORD - 
         echo "${{ secrets.DB_DATABASE }}" | docker secret create DB_DATABASE - 
