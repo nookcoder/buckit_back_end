@@ -15,18 +15,10 @@ COPY . .
 
 EXPOSE 3000
 
-RUN --mount=type=secret,id=DB_HOST \
-  cat ../run/secrets/DB_HOST
-RUN --mount=type=secret,id=DB_PASSWORD \
-  cat /run/secrets/DB_PASSWORD
-RUN --mount=type=secret,id=DB_DATABASE \
-  cat /run/secrets/DB_DATABASE
-RUN --mount=type=secret,id=DB_PORT \
-  cat /run/secrets/DB_PORT
-RUN --mount=type=secret,id=DB_USER \
-  cat /run/secrets/DB_USER
-RUN --mount=type=secret,id=SECRET_KEY \
-  cat /run/secrets/SECRET_KEY
+RUN ls -l
+RUN cd .. && ls -l
+RUN echo $DB_HOST
+RUN cd /app
 
 RUN npm run build
 
