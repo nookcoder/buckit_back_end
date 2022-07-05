@@ -37,7 +37,7 @@
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "922929577417.dkr.ecr.ap-northeast-2.amazonaws.com/buckit-prod",
+      "image": "922929577417.dkr.ecr.ap-northeast-2.amazonaws.com/buckit-prod:1c02b03276ebbf4ca561bab10b2f254a81f06526",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -64,7 +64,7 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod-task-definition:2",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:922929577417:task-definition/buckit-prod-task-definition:4",
   "family": "buckit-prod-task-definition",
   "requiresAttributes": [
     {
@@ -123,10 +123,9 @@
   "networkMode": "awsvpc",
   "runtimePlatform": null,
   "cpu": "256",
-  "revision": 2,
+  "revision": 4,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
-  "volumes": [],
-
+  "volumes": []
 }
