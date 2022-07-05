@@ -1,6 +1,6 @@
 FROM node:16-alpine as build
 
-RUN cat .env
+RUN cd .. && ls -l
 
 # Create app directory
 WORKDIR /app
