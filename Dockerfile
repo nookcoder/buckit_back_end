@@ -6,7 +6,7 @@ WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
 
-RUN npm install
+RUN #npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 
@@ -22,6 +22,8 @@ ARG DB_PASSWORD
 ARG DB_DATABASE
 ARG SECRET_KEY
 
+RUN printf DB_HOST
+
 ENV DB_HOST=$DB_HOST
 ENV DB_PORT=$DB_PORT
 ENV DB_USER=$DB_USER
@@ -29,8 +31,7 @@ ENV DB_PASSWORD=$DB_PASSWORD
 ENV DB_DATABASE=$DB_DATABASE
 ENV SECRET_KEY=$SECRET_KEY
 
-RUN npm run build
-
+RUN #npm run build
 
 ########### prod ################
 
