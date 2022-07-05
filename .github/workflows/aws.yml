@@ -87,7 +87,7 @@ jobs:
         printf "${{ secrets.DB_PORT }}" | docker secret create DB_PORT - 
         printf "${{ secrets.DB_USER }}" | docker secret create DB_USER - 
         printf "${{ secrets.SECRET_KEY }}" | docker secret create SECRET_KEY - 
-        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret id=DB_HOST,src=${{ secret.DB_HOST }}
+        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . -secret id=DB_HOST,src=${{ secret.DB_HOST }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
