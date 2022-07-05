@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.dto';
-import { UserRepository } from './user.repository';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,8 +24,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Like)
-    private readonly likeRepository: Repository<Like>,
-    private readonly userCustomRepository: UserRepository
+    private readonly likeRepository: Repository<Like>
   ) {}
 
   async getAllUser(): Promise<
@@ -96,9 +94,10 @@ export class UsersService {
     email,
   }: CheckExistenceInput): Promise<CheckExistenceOutput> {
     if (phoneNumber) {
-      const user = await this.userCustomRepository.findOneByPhoneNumber(
-        phoneNumber
-      );
+      const user = await this.userRepository.findOne({
+        where: { phoneNumber },
+      });
+
       if (user) {
         return {
           ok: true,
@@ -112,7 +111,10 @@ export class UsersService {
       };
     }
 
-    const user = await this.userCustomRepository.findOneByEmail(email);
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id'],
+    });
     if (user) {
       return {
         ok: true,

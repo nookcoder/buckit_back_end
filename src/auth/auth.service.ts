@@ -1,19 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../user/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '../user/user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly userRepository: UserRepository
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) {}
 
   async validateUser(phoneNumber: string, password: string): Promise<any> {
-    const user = await this.userRepository.findOneByPhoneNumber(phoneNumber);
+    const user = await this.userRepository.findOne({
+      where: { phoneNumber },
+      select: ['phoneNumber', 'password', 'id', 'role'],
+    });
+    console.log(user);
     if (user && (await bcrypt.compare(password, user.password))) {
       const { ...result } = user;
       return result;
