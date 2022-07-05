@@ -26,10 +26,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN --mount=type=secret,id=DB_HOST \
-  --mount=type=secret,id=DB_USER \
-   export DB_HOST=$(cat /run/secrets/DB_HOST) && \
-   export DB_USER=$(cat /run/secrets/DB_USER) && \
+RUN cat /run/secrets/DB_HOST
 
 ENV DB_HOST=${DB_HOST}
 ENV DB_PORT=5432
