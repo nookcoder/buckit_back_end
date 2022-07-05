@@ -82,7 +82,7 @@ jobs:
         # be deployed to ECS.
         mkdir app
         cd app 
-        echo DB_HOST="hello" > env
+        echo -e DB_HOST=$DBHOST\\n > env
         cat env
         cd ..
         DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . 
