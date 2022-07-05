@@ -16,7 +16,7 @@ COPY . .
 EXPOSE 3000
 
 RUN --mount=type=secret,id=DB_HOST \
-  cat /run/secrets/DB_HOST \
+  cat /run/secrets/DB_HOST
 RUN --mount=type=secret,id=DB_PASSWORD \
   cat /run/secrets/DB_PASSWORD
 RUN --mount=type=secret,id=DB_DATABASE \
