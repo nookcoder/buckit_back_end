@@ -81,6 +81,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
+        docker swarm init
         echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
         echo "${{ secrets.DB_USER }}" | docker secret create DB_USER - 
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
