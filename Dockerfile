@@ -1,6 +1,6 @@
 FROM node:16-alpine as build
 
-RUN echo $DB_HOST
+RUN cat .env
 
 # Create app directory
 WORKDIR /app
