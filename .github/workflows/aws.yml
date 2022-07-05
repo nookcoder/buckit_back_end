@@ -81,7 +81,8 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         mkdir app
-        echo DB_HOST="hello" > /app/env
+        cd app 
+        echo DB_HOST="hello" > env
         cat env
         DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . 
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
