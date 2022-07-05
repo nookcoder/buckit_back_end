@@ -71,6 +71,21 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
+    - name : Create .env
+      id: create-env
+      run: |
+        vi /app/.env
+        DB_HOST=${{ env.DB_HOST }}
+        DB_PORT=5432
+        DB_USER=${{ env.DB_USER }}
+        DB_PASSWORD=${{ env.DB_PASSWORD }}
+        DB_DATABASE=${{ env.DB_DATABASE }}
+        SECRET_KEY=${{ env.SECRET_KEY }}
+
+    - name : CHECK .env
+      run : |
+        cat /app/.env
+
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
@@ -83,7 +98,6 @@ jobs:
         # be deployed to ECS.
         docker swarm init
         echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
-        docker service create --name env --secret DB_HOST 
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
