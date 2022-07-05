@@ -110,6 +110,10 @@ jobs:
 #      id: download-task-definition
 #      run: |
 #        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > prod-task-definition.json
+    - name: Set Image
+      run: |
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
