@@ -1,5 +1,7 @@
 FROM node:16-alpine as build
 
+RUN echo $DB_HOST
+
 # Create app directory
 WORKDIR /app
 
@@ -15,11 +17,6 @@ COPY . .
 
 EXPOSE 3000
 
-RUN ls -l
-RUN cd .. && ls -l
-RUN echo $DB_HOST
-RUN cd /app
-
 RUN npm run build
 
 ########### prod ################
@@ -29,8 +26,6 @@ FROM node:16-alpine as production
 WORKDIR /app
 
 COPY package*.json ./
-
-
 
 RUN npm install --only=production
 
