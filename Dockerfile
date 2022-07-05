@@ -1,10 +1,10 @@
 FROM node:16-alpine as build
 
-RUN ls -l
-RUN cd .. && ls -l
-
 # Create app directory
 WORKDIR /app
+
+RUN ls -l
+RUN cd .. && ls -l
 
 # Install app dependencies
 COPY package*.json ./
