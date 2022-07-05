@@ -15,19 +15,18 @@ COPY . .
 
 EXPOSE 3000
 
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_DATABASE
-ARG SECRET_KEY
-
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_DATABASE=$DB_DATABASE
-ENV SECRET_KEY=$SECRET_KEY
+RUN --mount=type=secret,id=DB_HOST \
+  cat /run/secrets/DB_HOST \
+RUN --mount=type=secret,id=DB_PASSWORD \
+  cat /run/secrets/DB_PASSWORD
+RUN --mount=type=secret,id=DB_DATABASE \
+  cat /run/secrets/DB_DATABASE
+RUN --mount=type=secret,id=DB_PORT \
+  cat /run/secrets/DB_PORT
+RUN --mount=type=secret,id=DB_USER \
+  cat /run/secrets/DB_USER
+RUN --mount=type=secret,id=SECRET_KEY \
+  cat /run/secrets/SECRET_KEY
 
 RUN npm run build
 
@@ -39,24 +38,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_DATABASE
-ARG SECRET_KEY
 
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_DATABASE=$DB_DATABASE
-ENV SECRET_KEY=$SECRET_KEY
-
-RUN echo "$DB_HOST"
-RUN echo "$DB_PORT"
-RUN echo $DB_USER
-RUN echo $DB_PASSWORD
 
 RUN npm install --only=production
 
