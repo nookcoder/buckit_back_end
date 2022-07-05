@@ -81,13 +81,13 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         docker swarm init
-        echo "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
-        echo "${{ secrets.DB_PASSWORD }}" | docker secret create DB_PASSWORD - 
-        echo "${{ secrets.DB_DATABASE }}" | docker secret create DB_DATABASE - 
-        echo "${{ secrets.DB_PORT }}" | docker secret create DB_PORT - 
-        echo "${{ secrets.DB_USER }}" | docker secret create DB_USER - 
-        echo "${{ secrets.SECRET_KEY }}" | docker secret create SECRET_KEY - 
-        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        printf "${{ secrets.DB_HOST }}" | docker secret create DB_HOST - 
+        printf "${{ secrets.DB_PASSWORD }}" | docker secret create DB_PASSWORD - 
+        printf "${{ secrets.DB_DATABASE }}" | docker secret create DB_DATABASE - 
+        printf "${{ secrets.DB_PORT }}" | docker secret create DB_PORT - 
+        printf "${{ secrets.DB_USER }}" | docker secret create DB_USER - 
+        printf "${{ secrets.SECRET_KEY }}" | docker secret create SECRET_KEY - 
+        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --secret id=DB_HOST,src=${{ secret.DB_HOST }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
