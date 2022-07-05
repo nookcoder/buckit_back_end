@@ -26,7 +26,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN cat /run/secrets/DB_HOST
+RUN echo os.environ.get("DB_HOST", "")
 
 ENV DB_HOST=${DB_HOST}
 ENV DB_PORT=5432
