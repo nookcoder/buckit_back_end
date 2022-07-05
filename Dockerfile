@@ -3,6 +3,8 @@ FROM node:16-alpine as build
 # Create app directory
 WORKDIR /app
 
+RUN echo $DB_HOST
+
 # Install app dependencies
 COPY package*.json ./
 
