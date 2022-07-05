@@ -80,6 +80,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
+        mkdir app
         echo DB_HOST="hello" > /app/env
         cat env
         DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . 
