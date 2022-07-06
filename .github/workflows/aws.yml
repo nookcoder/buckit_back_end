@@ -36,7 +36,7 @@ env:
   ECR_REPOSITORY: buckit-prod           # set this to your Amazon ECR repository name
   ECS_SERVICE: buckit-prod-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: buckit-prod-cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ./prod-task-definition.json  # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: buckit-prod-task  # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/prod-task-definition.json
   CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
 
@@ -77,16 +77,17 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
-#    - name: Download task definition
-#      id: download-task-definition
-#      run: |
-#        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > prod-task-definition.json
+
+    - name: Download task definition
+      id: download-task-definition
+      run: |
+        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        task-definition: task-definition.json
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
 
