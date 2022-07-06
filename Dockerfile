@@ -39,6 +39,6 @@ COPY --from=build /app/dist ./dist
 EXPOSE 3000
 
 # Define the command to run my app using CMD which defines your runtime
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:prod"]
 
 
