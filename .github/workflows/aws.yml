@@ -40,13 +40,6 @@ env:
                                                # file, e.g. .aws/prod-task-definition.json
   CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
 
-  DB_HOST : ${{ secrets.DB_HOST }}
-  DB_PORT : ${{ secrets.DB_PORT }}
-  DB_USER : ${{ secrets.DB_USER }}
-  DB_PASSWORD : ${{ secrets.DB_PASSWORD }}
-  DB_DATABASE : ${{ secrets.DB_DATABASE }}
-  SECRET_KEY : ${{ secrets.SECRET_KEY }}
-
 permissions:
   contents: read
 
@@ -80,8 +73,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        export DB_HOST="hello"
-        DOCKER_BUILDKIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . 
+        ocker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . 
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "${{ secrets.AWS_ACCESS_KEY_ID }}"

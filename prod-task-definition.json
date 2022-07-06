@@ -25,7 +25,25 @@
       "command": null,
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
+      "environment": [{
+        "name": "DB_HOST",
+        "value": "buckit-prod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com"
+      }, {
+        "name" : "DB_POST",
+        "value": "5432"
+      }, {
+        "name" : "DB_USER",
+        "value": "buckit"
+      }, {
+        "name" : "DB_PASSWORD",
+        "value": "buckit8080"
+      }, {
+        "name" : "DB_DATABASE",
+        "value": "buckit"
+      }, {
+        "name" : "SECRET_KEY",
+        "value": "5fasdf"
+      }],
       "resourceRequirements": null,
       "ulimits": null,
       "dnsServers": null,
