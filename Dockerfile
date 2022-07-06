@@ -15,6 +15,13 @@ COPY . .
 
 EXPOSE 3000
 
+ENV DB_HOST="buckit-prod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com"
+ENV DB_PORT="5432"
+ENV DB_USER="buckit"
+ENV DB_PASSWORD="buckit8080"
+ENV DB_DATABSE="buckit"
+ENV SECRET_KEY="tjqoitj"
+
 RUN npm run build
 
 ########### prod ################
@@ -31,8 +38,7 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
-
 # Define the command to run my app using CMD which defines your runtime
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
 
 
