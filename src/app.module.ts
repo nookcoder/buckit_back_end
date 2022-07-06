@@ -28,12 +28,12 @@ import { JwtService } from '@nestjs/jwt';
         DB_HOST: Joi.string()
           .required()
           .equal(
-            'buckprod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com'
+            'buckit-prod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com'
           ),
-        DB_PORT: Joi.string().required(),
-        DB_USER: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_DATABASE: Joi.string().required(),
+        DB_PORT: Joi.string().required().equal('5432'),
+        DB_USER: Joi.string().required().equal('buckit'),
+        DB_PASSWORD: Joi.string().required().equal('buckit8080'),
+        DB_DATABASE: Joi.string().required().equal('buckit'),
         SECRET_KEY: Joi.string().required(),
       }),
     }),
