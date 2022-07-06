@@ -23,9 +23,12 @@ FROM node:16-alpine as production
 
 WORKDIR /app
 
+COPY package*.json ./
+
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
+
 
 # Define the command to run my app using CMD which defines your runtime
 CMD ["npm", "run", "start:prod"]
