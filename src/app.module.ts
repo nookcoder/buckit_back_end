@@ -28,7 +28,7 @@ import { JwtService } from '@nestjs/jwt';
         DB_HOST: Joi.string()
           .required()
           .equal(
-            'buckit-prod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com'
+            'buckprod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com'
           ),
         DB_PORT: Joi.string().required(),
         DB_USER: Joi.string().required(),
