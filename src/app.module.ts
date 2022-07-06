@@ -25,7 +25,11 @@ import { JwtService } from '@nestjs/jwt';
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
-        DB_HOST: Joi.string().required(),
+        DB_HOST: Joi.string()
+          .required()
+          .equal(
+            'buckit-prod-postgres.cu2tuicjcenu.ap-northeast-2.rds.amazonaws.com'
+          ),
         DB_PORT: Joi.string().required(),
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
