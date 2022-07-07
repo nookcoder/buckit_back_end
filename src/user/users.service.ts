@@ -4,8 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.dto';
-import { CoreOutput } from '../common/dto/core-output.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -126,23 +124,5 @@ export class UsersService {
       ok: true,
       existence: false,
     };
-  }
-
-  async createUser(
-    createUserInput: CreateUserInput
-  ): Promise<void | CoreOutput> {
-    try {
-      await this.userRepository.save(
-        await this.userRepository.create(createUserInput)
-      );
-      return {
-        ok: true,
-      };
-    } catch (e) {
-      return {
-        ok: false,
-        error: e,
-      };
-    }
   }
 }
