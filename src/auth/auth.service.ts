@@ -1,13 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { CreateUserInput } from './dto/create-user.dto';
+import { CoreOutput } from '../common/dto/core-output.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
@@ -18,7 +26,6 @@ export class AuthService {
       where: { phoneNumber },
       select: ['phoneNumber', 'password', 'id', 'role'],
     });
-    console.log(user);
     if (user && (await bcrypt.compare(password, user.password))) {
       const { ...result } = user;
       return result;
@@ -27,9 +34,116 @@ export class AuthService {
   }
 
   async login(req: any) {
-    const payloads = { userId: req.user.id, role: req.user.role };
+    const { id, phoneNumber, role } = req.user;
+    const { accessToken, refreshToken } = await this.getTokens(
+      id,
+      phoneNumber,
+      role
+    );
+    await this.updateRefreshToken(id, refreshToken);
+
     return {
-      access_token: this.jwtService.sign(payloads),
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
+  }
+
+  async signUp(createUserInput: CreateUserInput): Promise<void | CoreOutput> {
+    try {
+      await this.userRepository.save(
+        await this.userRepository.create(createUserInput)
+      );
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: e,
+      };
+    }
+  }
+
+  async refreshTokens(req: any) {
+    const { userId, role, phoneNumber, refresh_token } = req.user;
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['refreshToken'],
+    });
+
+    if (!user) {
+      return new NotFoundException();
+    }
+    if (refresh_token !== user.refreshToken) {
+      return new UnauthorizedException();
+    }
+
+    const { accessToken, refreshToken } = await this.getTokens(
+      userId,
+      role,
+      phoneNumber
+    );
+    await this.updateRefreshToken(userId, refreshToken);
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
+  }
+
+  async logout(userId: number): Promise<NotFoundException | CoreOutput> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return new NotFoundException();
+    }
+
+    await this.userRepository.update(userId, {
+      refreshToken: null,
+    });
+
+    return {
+      ok: true,
+    };
+  }
+
+  // todo : refresh token 암호화 bcrypt 는 72자까지 밖에 안되서 항상 true 를 반환한다.
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    await this.userRepository.update(userId, {
+      refreshToken: refreshToken,
+    });
+  }
+
+  async getTokens(userId: number, phoneNumber: string, userRole: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          userId: userId,
+          role: userRole,
+        },
+        {
+          secret: this.configService.get<string>('ACCESS_SECRET_KEY'),
+          expiresIn: this.configService.get<string>('ACCESS_EXPIRES_IN'),
+        }
+      ),
+      this.jwtService.signAsync(
+        {
+          userId: userId,
+          phoneNumber: phoneNumber,
+          role: userRole,
+        },
+        {
+          secret: this.configService.get<string>('REFRESH_SECRET_KEY'),
+          expiresIn: this.configService.get<string>('REFRESH_EXPIRES_IN'),
+        }
+      ),
+    ]);
+
+    return {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
   }
 }

@@ -10,8 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CoreOutput } from '../common/dto/core-output.dto';
-import { CreateUserInput } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { User, UserRole } from './entities/user.entity';
 import { CheckExistenceOutput } from './dto/check-exist-user.dto';
@@ -68,16 +66,6 @@ export class UsersController {
   }
 
   /** POST **/
-  /**
-   * Create a new user
-   * @param createUserInput
-   */
-  @Post()
-  async createNewUser(
-    @Body() createUserInput: CreateUserInput
-  ): Promise<void | CoreOutput> {
-    return await this.userService.createUser(createUserInput);
-  }
 
   /**
    * Update Password
