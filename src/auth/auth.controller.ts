@@ -10,9 +10,9 @@ import {
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local/local-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateUserInput } from '../user/dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { JwtRefreshAuthGuard } from './jwt/jwt-refresh-auth.guard';
+import { CreateUserInput } from './dto/create-user.dto';
 
 @Controller('api/v1/auth')
 @ApiTags('인증 관련 API')
