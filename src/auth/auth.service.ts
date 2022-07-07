@@ -11,12 +11,15 @@ import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserInput } from './dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
+import { HttpService } from '@nestjs/axios';
+import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly httpService: HttpService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) {}
@@ -107,6 +110,12 @@ export class AuthService {
     return {
       ok: true,
     };
+  }
+
+  okCert(): Observable<any> {
+    return this.httpService
+      .get('https://safe.ok-name.co.kr/gCEA/')
+      .pipe(map((response) => response.data));
   }
 
   // todo : refresh token 암호화 bcrypt 는 72자까지 밖에 안되서 항상 true 를 반환한다.
