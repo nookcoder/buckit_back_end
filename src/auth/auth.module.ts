@@ -9,11 +9,13 @@ import { UsersModule } from '../user/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { JwtRefreshStrategy } from './jwt/jwt-refresh.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     PassportModule,
     UsersModule,
+    HttpModule,
     JwtModule.register({}),
     TypeOrmModule.forFeature([User]),
   ],
