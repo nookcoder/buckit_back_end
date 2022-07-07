@@ -4,6 +4,7 @@ import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   Client = 'client',
@@ -60,6 +61,10 @@ export class User extends CoreEntity {
 
   @OneToMany(() => Order, (order) => order.user, { nullable: true })
   orders: Order[];
+
+  @Column({ nullable: true, unique: true, select: false })
+  @Exclude()
+  refreshToken?: string;
 
   @BeforeInsert()
   @BeforeUpdate()
