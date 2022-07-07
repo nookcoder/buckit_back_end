@@ -30,7 +30,6 @@ import { JwtService } from '@nestjs/jwt';
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
-        SECRET_KEY: Joi.string().required(),
         ACCESS_SECRET_KEY: Joi.string().required(),
         ACCESS_EXPIRES_IN: Joi.string().required(),
         REFRESH_SECRET_KEY: Joi.string().required(),

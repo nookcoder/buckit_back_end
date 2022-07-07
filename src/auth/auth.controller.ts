@@ -19,6 +19,10 @@ import { CreateUserInput } from './dto/create-user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * Access Token, Refresh Token 발급
+   * @param req
+   */
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(@Request() req) {
@@ -32,18 +36,33 @@ export class AuthController {
     return await this.authService.signUp(createUserInput);
   }
 
-  // access token 이 만료되었을 때 refresh token 을 통해 at, rt 재발급
+  /**
+   * Access token, Refresh Token 재발급
+   * @param req
+   */
   @UseGuards(JwtRefreshAuthGuard)
   @Get('/refresh')
   async refresh(@Request() req) {
     return await this.authService.refreshTokens(req);
   }
 
-  // refresh token 으로 요청을 보내고 refresh token 삭제
+  /**
+   * Refresh token null 처리
+   * @param req
+   */
   @UseGuards(JwtRefreshAuthGuard)
   @Get('/logout')
   async logout(@Request() req): Promise<NotFoundException | CoreOutput> {
     const { userId } = req.user;
     return await this.authService.logout(userId);
+  }
+
+  @Get('/okcert')
+  async okCert() {
+    const response = this.authService.okCert();
+    response.subscribe((res) => {
+      console.log(res);
+    });
+    return response;
   }
 }
