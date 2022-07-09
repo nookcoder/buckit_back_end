@@ -29,7 +29,7 @@ export class AuthController {
     return await this.authService.login(req);
   }
 
-  @Post('/sing-up')
+  @Post('/sign-up')
   async signUp(
     @Body() createUserInput: CreateUserInput
   ): Promise<void | CoreOutput> {

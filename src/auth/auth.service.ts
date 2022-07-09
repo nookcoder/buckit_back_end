@@ -52,10 +52,14 @@ export class AuthService {
   }
 
   async signUp(createUserInput: CreateUserInput): Promise<void | CoreOutput> {
+    const termsOfMarketing: boolean =
+      createUserInput.termsOfMarketing == 'true';
+    const newUser = {
+      ...createUserInput,
+      termsOfMarketing: termsOfMarketing,
+    };
     try {
-      await this.userRepository.save(
-        await this.userRepository.create(createUserInput)
-      );
+      await this.userRepository.save(await this.userRepository.create(newUser));
       return {
         ok: true,
       };
