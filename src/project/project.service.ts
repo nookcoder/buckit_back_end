@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CreateProjectInput,
-  CreateProjectOutput,
-} from './dto/create-project.dto';
+import { CreateProjectInput } from './dto/create-project.dto';
 import { validateDeadlineStringFormat } from './utils/validate';
 import { FORMAT_ERROR } from './utils/constants';
 import { GetAllProjectsOutput, GetProjectOutput } from './dto/get-project.dto';
@@ -18,6 +15,9 @@ import {
   ResponseAndPrintError,
 } from '../common/utils/error-message';
 import { CoreOutput } from '../common/dto/core-output.dto';
+import { uploadContentImages, uploadThumbnailImage } from './utils/images';
+import { v4 as uuidv4 } from 'uuid';
+import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 
 @Injectable()
 export class ProjectService {
@@ -62,6 +62,43 @@ export class ProjectService {
     } catch (e) {
       ResponseAndPrintError(e);
     }
+  }
+
+  async createProject(
+    files: {
+      thumbnail: Array<Express.Multer.File>;
+      content: Array<Express.Multer.File>;
+    },
+    input: InputCreateProjectBody
+  ) {
+    const projectUuid = uuidv4();
+    const thumbnailUrl = await uploadThumbnailImage(
+      projectUuid,
+      files.thumbnail[0]
+    );
+    const contentUrl = await uploadContentImages(projectUuid, files.content);
+    const deadline: Date | typeof FORMAT_ERROR =
+      this.createDateInstanceForDeadline(input.deadline);
+
+    if (deadline === FORMAT_ERROR) {
+      return {
+        ok: false,
+        error: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
+      };
+    }
+    input.deadline = deadline;
+
+    const newProject: CreateProjectInput = {
+      ...input,
+      total: +input.total,
+      thumbnailImage: thumbnailUrl,
+      pricePerQuarter: +input.pricePerQuarter,
+      content: contentUrl,
+    };
+    console.log(newProject);
+    await this.projectRepository.save(
+      this.projectRepository.create(newProject)
+    );
   }
 
   async updateProject(
@@ -109,29 +146,6 @@ export class ProjectService {
       await this.projectRepository.save(
         this.projectRepository.create(updatedProject)
       );
-      return {
-        ok: true,
-      };
-    } catch (e) {
-      ResponseAndPrintError(e);
-    }
-  }
-
-  async createProject(input: CreateProjectInput): Promise<CreateProjectOutput> {
-    try {
-      const deadline: Date | typeof FORMAT_ERROR =
-        this.createDateInstanceForDeadline(input.deadline);
-
-      // 마감일자 Request 타입 확인
-      if (deadline === FORMAT_ERROR) {
-        return {
-          ok: false,
-          error: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
-        };
-      }
-      input.deadline = deadline;
-      const newProject = await this.projectRepository.create(input);
-      await this.projectRepository.save(newProject);
       return {
         ok: true,
       };

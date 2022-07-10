@@ -1,6 +1,6 @@
 import { CoreEntity } from '../../common/entities/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
 
@@ -26,9 +26,9 @@ export class Project extends CoreEntity {
   promotionContent: string;
 
   // 상세 내용 보기 -> 이미지 주소
-  @Column({ nullable: true })
-  @IsString()
-  content: string;
+  @Column('text', { nullable: true, array: true })
+  @IsArray()
+  content: string[];
 
   @Column()
   @IsString()
