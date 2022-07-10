@@ -34,6 +34,7 @@ import { JwtService } from '@nestjs/jwt';
         ACCESS_EXPIRES_IN: Joi.string().required(),
         REFRESH_SECRET_KEY: Joi.string().required(),
         REFRESH_EXPIRES_IN: Joi.string().required(),
+        AWS_BUCKET_NAME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({

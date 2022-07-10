@@ -1,14 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ProjectService } from './project.service';
 import {
-  CreateProjectInput,
-  CreateProjectOutput,
-} from './dto/create-project.dto';
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
+import { ProjectService } from './project.service';
 import { Project } from './entities/project.entity';
 import { CoreOutput } from '../common/dto/core-output.dto';
-import { UpdateProjectInput } from './dto/update-project.dto';
 import { Roles } from '../auth/roles/roles.decorator';
 import { UserRole } from '../user/entities/user.entity';
+import { UpdateProjectInput } from './dto/update-project.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
+import { UPLOAD_FIELDS } from './utils/constants';
+import { FilesTypeDto } from './dto/files-type.dto';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -26,15 +35,17 @@ export class ProjectController {
 
   /**
    * Create a new project
+   * @param files
    * @param input
    */
-
-  @Post()
-  @Roles(UserRole.Admin)
+  @Post('/')
+  @UseInterceptors(FileFieldsInterceptor(UPLOAD_FIELDS))
   async createProject(
-    @Body() input: CreateProjectInput
-  ): Promise<CreateProjectOutput> {
-    return await this.projectService.createProject(input);
+    @UploadedFiles()
+    files: FilesTypeDto,
+    @Body() input: InputCreateProjectBody
+  ) {
+    return await this.projectService.createProject(files, input);
   }
 
   /**

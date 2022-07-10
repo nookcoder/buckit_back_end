@@ -6,5 +6,6 @@ export class CreateUserInput extends PickType(User, [
   'email',
   'password',
   'role',
-  'termsOfMarketing',
-]) {}
+]) {
+  termsOfMarketing: string | boolean;
+}

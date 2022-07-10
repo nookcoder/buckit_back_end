@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Project, ProjectStatus } from '../entities/project.entity';
 import { CoreOutput } from '../../common/dto/core-output.dto';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 @Injectable()
 export class CreateProjectInput extends PickType(Project, [
@@ -24,19 +30,21 @@ export class CreateProjectInput extends PickType(Project, [
   @ApiProperty()
   summary: string;
 
-  @IsString()
+  @IsArray()
   @ApiProperty()
-  content: string;
+  content: string[];
 
   @IsString()
   @ApiProperty()
   address: string;
 
-  @IsString()
+  @IsOptional()
   @ApiProperty()
   thumbnailImage: string;
 
-  @IsString()
+  @IsString({
+    message: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
+  })
   @ApiProperty()
   deadline: Date;
 
