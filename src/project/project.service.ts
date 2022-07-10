@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateProjectInput } from './dto/create-project.dto';
+import {
+  CreateProjectInput,
+  CreateProjectOutput,
+} from './dto/create-project.dto';
 import { validateDeadlineStringFormat } from './utils/validate';
 import { FORMAT_ERROR } from './utils/constants';
 import { GetAllProjectsOutput, GetProjectOutput } from './dto/get-project.dto';
@@ -18,6 +21,7 @@ import { CoreOutput } from '../common/dto/core-output.dto';
 import { uploadContentImages, uploadThumbnailImage } from './utils/images';
 import { v4 as uuidv4 } from 'uuid';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
+import { FilesTypeDto } from './dto/files-type.dto';
 
 @Injectable()
 export class ProjectService {
@@ -65,40 +69,43 @@ export class ProjectService {
   }
 
   async createProject(
-    files: {
-      thumbnail: Array<Express.Multer.File>;
-      content: Array<Express.Multer.File>;
-    },
+    files: FilesTypeDto,
     input: InputCreateProjectBody
-  ) {
-    const projectUuid = uuidv4();
-    const thumbnailUrl = await uploadThumbnailImage(
-      projectUuid,
-      files.thumbnail[0]
-    );
-    const contentUrl = await uploadContentImages(projectUuid, files.content);
-    const deadline: Date | typeof FORMAT_ERROR =
-      this.createDateInstanceForDeadline(input.deadline);
+  ): Promise<CreateProjectOutput> {
+    try {
+      const projectUuid = uuidv4();
+      const thumbnailUrl = await uploadThumbnailImage(
+        projectUuid,
+        files.thumbnail[0]
+      );
+      const contentUrl = await uploadContentImages(projectUuid, files.content);
+      const deadline: Date | typeof FORMAT_ERROR =
+        this.createDateInstanceForDeadline(input.deadline);
 
-    if (deadline === FORMAT_ERROR) {
-      return {
-        ok: false,
-        error: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
+      if (deadline === FORMAT_ERROR) {
+        return {
+          ok: false,
+          error: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
+        };
+      }
+      input.deadline = deadline;
+
+      const newProject: CreateProjectInput = {
+        ...input,
+        total: +input.total,
+        thumbnailImage: thumbnailUrl,
+        pricePerQuarter: +input.pricePerQuarter,
+        content: contentUrl,
       };
+      await this.projectRepository.save(
+        this.projectRepository.create(newProject)
+      );
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      return { ok: false, error: e };
     }
-    input.deadline = deadline;
-
-    const newProject: CreateProjectInput = {
-      ...input,
-      total: +input.total,
-      thumbnailImage: thumbnailUrl,
-      pricePerQuarter: +input.pricePerQuarter,
-      content: contentUrl,
-    };
-    console.log(newProject);
-    await this.projectRepository.save(
-      this.projectRepository.create(newProject)
-    );
   }
 
   async updateProject(

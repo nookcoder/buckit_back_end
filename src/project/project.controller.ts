@@ -16,6 +16,8 @@ import { UserRole } from '../user/entities/user.entity';
 import { UpdateProjectInput } from './dto/update-project.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
+import { UPLOAD_FIELDS } from './utils/constants';
+import { FilesTypeDto } from './dto/files-type.dto';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -37,24 +39,10 @@ export class ProjectController {
    * @param input
    */
   @Post('/')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      {
-        name: 'thumbnail',
-        maxCount: 1,
-      },
-      {
-        name: 'content',
-        maxCount: 10,
-      },
-    ])
-  )
+  @UseInterceptors(FileFieldsInterceptor(UPLOAD_FIELDS))
   async createProject(
     @UploadedFiles()
-    files: {
-      thumbnail: Array<Express.Multer.File>;
-      content: Array<Express.Multer.File>;
-    },
+    files: FilesTypeDto,
     @Body() input: InputCreateProjectBody
   ) {
     return await this.projectService.createProject(files, input);
