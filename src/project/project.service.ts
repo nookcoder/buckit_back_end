@@ -22,12 +22,17 @@ import { uploadContentImages, uploadThumbnailImage } from './utils/images';
 import { v4 as uuidv4 } from 'uuid';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { FilesTypeDto } from './dto/files-type.dto';
+import { CategoryRepository } from './repository/category.repository';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Project)
-    private readonly projectRepository: Repository<Project>
+    private readonly projectRepository: Repository<Project>,
+    @InjectRepository(Category)
+    private readonly category: Repository<Category>,
+    private readonly categoryRepository: CategoryRepository
   ) {}
 
   async getAllProjects(): Promise<Project[] | GetAllProjectsOutput> {
@@ -90,8 +95,13 @@ export class ProjectService {
       }
       input.deadline = deadline;
 
+      const category = await this.categoryRepository.getOrCreateCategory(
+        input.category
+      );
+
       const newProject: CreateProjectInput = {
         ...input,
+        category: category,
         total: +input.total,
         thumbnailImage: thumbnailUrl,
         pricePerQuarter: +input.pricePerQuarter,
@@ -100,6 +110,7 @@ export class ProjectService {
       await this.projectRepository.save(
         this.projectRepository.create(newProject)
       );
+
       return {
         ok: true,
       };

@@ -16,6 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
 import { JwtService } from '@nestjs/jwt';
+import { Category } from './project/entities/category.entity';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { JwtService } from '@nestjs/jwt';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Project, Like, Order],
+      entities: [User, Project, Like, Order, Category],
       synchronize: true,
     }),
     UsersModule,

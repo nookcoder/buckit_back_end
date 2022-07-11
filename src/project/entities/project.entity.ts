@@ -1,8 +1,16 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Order } from '../../order/entities/order.entity';
+import { Category } from './category.entity';
 
 export enum ProjectStatus {
   Before = 'before',
@@ -68,6 +76,11 @@ export class Project extends CoreEntity {
   @Column({ nullable: true })
   @IsNumber()
   expectedProfit: number;
+
+  @ManyToOne(() => Category, (category) => category.projects, {
+    nullable: true,
+  })
+  category: Category;
 
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
