@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Project } from './entities/project.entity';
+import { Project, ProjectStatus } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateProjectInput,
@@ -35,10 +35,20 @@ export class ProjectService {
     private readonly categoryRepository: CategoryRepository
   ) {}
 
-  async getAllProjects(): Promise<Project[] | GetAllProjectsOutput> {
+  async getAllProjects(
+    status: ProjectStatus | undefined,
+    page: number | undefined,
+    pageSize: number | undefined
+  ): Promise<Project[] | GetAllProjectsOutput> {
     try {
       const projects = await this.projectRepository.find({
+        where: {
+          status: status,
+        },
         relations: ['likes'],
+        order: { createdAt: 'DESC' },
+        skip: page ? (page - 1) * 10 : null,
+        take: pageSize ? pageSize : 10,
       });
       if (projects) {
         return {
