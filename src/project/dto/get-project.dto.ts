@@ -7,4 +7,5 @@ export class GetAllProjectsOutput extends CoreOutput {
 
 export class GetProjectOutput extends CoreOutput {
   project?: Project;
+  like?: boolean;
 }
