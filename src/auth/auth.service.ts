@@ -13,6 +13,7 @@ import { CreateUserInput } from './dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
 import { map, Observable } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -57,6 +58,7 @@ export class AuthService {
     const newUser = {
       ...createUserInput,
       termsOfMarketing: termsOfMarketing,
+      uuid: uuidv4(),
     };
     try {
       await this.userRepository.save(await this.userRepository.create(newUser));

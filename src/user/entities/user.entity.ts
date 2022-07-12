@@ -13,6 +13,9 @@ export enum UserRole {
 
 @Entity()
 export class User extends CoreEntity {
+  @Column()
+  uuid: string;
+
   // todo : 인증 받아오면 nullable 삭제
   @Column({ nullable: true, default: 'Lex' })
   name: string;
