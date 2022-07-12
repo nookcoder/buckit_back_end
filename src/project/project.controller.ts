@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Query,
+  Req,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
@@ -19,6 +21,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { UPLOAD_FIELDS } from './utils/constants';
 import { FilesTypeDto } from './dto/files-type.dto';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -33,9 +36,10 @@ export class ProjectController {
     return await this.projectService.getAllProjects(status, page, pageSize);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:projectId')
-  async getProject(@Param('projectId') id) {
-    return await this.projectService.getProject(id);
+  async getProject(@Param('projectId') id, @Req() req) {
+    return await this.projectService.getProject(id, req.user.userId);
   }
 
   /**

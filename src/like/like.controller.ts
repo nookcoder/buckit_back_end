@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Request,
@@ -26,6 +27,15 @@ export class LikeController {
   @Delete('/:projectId')
   async deleteLike(@Request() req, @Param('projectId') projectId) {
     return await this.likeService.deleteLike({
+      userId: req.user.userId,
+      projectId: projectId,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/:projectId')
+  async handle(@Request() req, @Param('projectId') projectId) {
+    return await this.likeService.handleLike({
       userId: req.user.userId,
       projectId: projectId,
     });

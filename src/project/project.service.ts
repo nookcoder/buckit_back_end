@@ -65,7 +65,10 @@ export class ProjectService {
     }
   }
 
-  async getProject(projectId: number): Promise<Project | GetProjectOutput> {
+  async getProject(
+    projectId: number,
+    userId: number
+  ): Promise<Project | GetProjectOutput> {
     try {
       const project = await this.projectRepository.findOne({
         where: { id: projectId },
@@ -74,9 +77,18 @@ export class ProjectService {
       if (!project) {
         NotFoundEntity();
       }
+      const isExistLike = project.likes.map((like) => like.userId == userId);
+      if (isExistLike) {
+        return {
+          ok: true,
+          project,
+          like: true,
+        };
+      }
       return {
         ok: true,
         project,
+        like: false,
       };
     } catch (e) {
       ResponseAndPrintError(e);

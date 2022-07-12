@@ -18,6 +18,31 @@ export class LikeService {
     private readonly userRepository: Repository<User>
   ) {}
 
+  async handleLike(input: LikeInput) {
+    const likes = await this.likeRepository.find({
+      where: {
+        projectId: input.projectId,
+      },
+    });
+
+    if (!likes) {
+      await this.createLike(input);
+      return {
+        ok: true,
+      };
+    }
+
+    const isExist = likes.find((like) => like.userId == input.userId);
+    if (!isExist) {
+      await this.createLike(input);
+      return {
+        ok: true,
+      };
+    }
+
+    await this.deleteLike(input);
+  }
+
   async createLike(input: LikeInput) {
     const project = await this.projectRepository.findOne({
       where: { id: input.projectId },
