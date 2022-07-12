@@ -10,4 +10,5 @@ export class InputCreateProjectBody extends PickType(Project, [
 ]) {
   total: string;
   pricePerQuarter: string;
+  category: string;
 }

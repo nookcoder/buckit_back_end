@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Project } from './entities/project.entity';
+import { Project, ProjectStatus } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateProjectInput,
@@ -22,18 +22,33 @@ import { uploadContentImages, uploadThumbnailImage } from './utils/images';
 import { v4 as uuidv4 } from 'uuid';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { FilesTypeDto } from './dto/files-type.dto';
+import { CategoryRepository } from './repository/category.repository';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Project)
-    private readonly projectRepository: Repository<Project>
+    private readonly projectRepository: Repository<Project>,
+    @InjectRepository(Category)
+    private readonly category: Repository<Category>,
+    private readonly categoryRepository: CategoryRepository
   ) {}
 
-  async getAllProjects(): Promise<Project[] | GetAllProjectsOutput> {
+  async getAllProjects(
+    status: ProjectStatus | undefined,
+    page: number | undefined,
+    pageSize: number | undefined
+  ): Promise<Project[] | GetAllProjectsOutput> {
     try {
       const projects = await this.projectRepository.find({
+        where: {
+          status: status,
+        },
         relations: ['likes'],
+        order: { createdAt: 'DESC' },
+        skip: page ? (page - 1) * 10 : null,
+        take: pageSize ? pageSize : 10,
       });
       if (projects) {
         return {
@@ -90,8 +105,13 @@ export class ProjectService {
       }
       input.deadline = deadline;
 
+      const category = await this.categoryRepository.getOrCreateCategory(
+        input.category
+      );
+
       const newProject: CreateProjectInput = {
         ...input,
+        category: category,
         total: +input.total,
         thumbnailImage: thumbnailUrl,
         pricePerQuarter: +input.pricePerQuarter,
@@ -100,6 +120,7 @@ export class ProjectService {
       await this.projectRepository.save(
         this.projectRepository.create(newProject)
       );
+
       return {
         ok: true,
       };

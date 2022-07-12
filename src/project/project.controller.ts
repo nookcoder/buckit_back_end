@@ -5,11 +5,12 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { Project } from './entities/project.entity';
+import { Project, ProjectStatus } from './entities/project.entity';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { Roles } from '../auth/roles/roles.decorator';
 import { UserRole } from '../user/entities/user.entity';
@@ -24,8 +25,12 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Get()
-  async getAllProjects(): Promise<Project[] | CoreOutput> {
-    return await this.projectService.getAllProjects();
+  async getAllProjects(
+    @Query('status') status: ProjectStatus | undefined,
+    @Query('page') page: number | undefined,
+    @Query('pageSize') pageSize: number | undefined
+  ): Promise<Project[] | CoreOutput> {
+    return await this.projectService.getAllProjects(status, page, pageSize);
   }
 
   @Get('/:projectId')

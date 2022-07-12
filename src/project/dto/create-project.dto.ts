@@ -9,6 +9,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Category } from '../entities/category.entity';
 
 @Injectable()
 export class CreateProjectInput extends PickType(Project, [
@@ -61,6 +62,10 @@ export class CreateProjectInput extends PickType(Project, [
   @IsNumber()
   @ApiProperty()
   pricePerQuarter: number;
+
+  @IsString()
+  @ApiProperty()
+  category: Category;
 }
 
 export class CreateProjectOutput extends CoreOutput {}
