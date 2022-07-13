@@ -77,18 +77,11 @@ export class ProjectService {
       if (!project) {
         NotFoundEntity();
       }
-      const isExistLike = project.likes.map((like) => like.userId == userId);
-      if (isExistLike) {
-        return {
-          ok: true,
-          project,
-          like: true,
-        };
-      }
+      const isExistLike = project.likes.find((like) => like.userId == userId);
       return {
         ok: true,
         project,
-        like: false,
+        isLike: !!isExistLike,
       };
     } catch (e) {
       ResponseAndPrintError(e);
