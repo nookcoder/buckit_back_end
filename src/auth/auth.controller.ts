@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { JwtRefreshAuthGuard } from './jwt/jwt-refresh-auth.guard';
 import { CreateUserInput } from './dto/create-user.dto';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 
 @Controller('api/v1/auth')
 @ApiTags('인증 관련 API')
@@ -55,6 +57,19 @@ export class AuthController {
   async logout(@Request() req): Promise<NotFoundException | CoreOutput> {
     const { userId } = req.user;
     return await this.authService.logout(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/check')
+  async isMatchWithRegisteredUser(@Query() query, @Request() req) {
+    const { userId } = req.user;
+    const { email, phoneNumber } = query;
+    console.log(`email : ${email} phoneNumber : ${phoneNumber}`);
+    return await this.authService.isMatchWithRegisteredUser(
+      email,
+      phoneNumber,
+      userId
+    );
   }
 
   @Get('/okcert')

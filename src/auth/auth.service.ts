@@ -118,6 +118,34 @@ export class AuthService {
     };
   }
 
+  async isMatchWithRegisteredUser(
+    email: string,
+    phoneNumber: string,
+    userId: number
+  ) {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (email && user.email === email) {
+        return {
+          ok: true,
+        };
+      } else if (phoneNumber && user.phoneNumber === phoneNumber) {
+        return {
+          ok: true,
+        };
+      }
+      return {
+        ok: false,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        ok: false,
+        error: e,
+      };
+    }
+  }
+
   okCert(): Observable<any> {
     return this.httpService
       .get('https://safe.ok-name.co.kr/gCEA/')
