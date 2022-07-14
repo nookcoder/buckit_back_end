@@ -42,9 +42,12 @@ export class UsersController {
     return await this.userService.getProfileById(req.user.userId);
   }
 
-  @Get('/likes/:userId')
-  async getLikes(@Param('userId') userId) {
-    return await this.userService.getLikes(userId);
+  @UseGuards(JwtAuthGuard)
+  @Get('/likes')
+  async getLikes(@Request() req, @Query() query) {
+    const { userId } = req.user;
+    const { page, pageSize } = query;
+    return await this.userService.getLikes(userId, page, pageSize);
   }
 
   /**

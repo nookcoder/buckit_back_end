@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   Query,
-  Req,
+  Request,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -38,7 +38,7 @@ export class ProjectController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/:projectId')
-  async getProject(@Param('projectId') id, @Req() req) {
+  async getProject(@Param('projectId') id, @Request() req) {
     return await this.projectService.getProject(id, req.user.userId);
   }
 

@@ -52,10 +52,13 @@ export class UsersService {
     }
   }
 
-  async getLikes(userId: number) {
+  async getLikes(userId: number, page: number, pageSize: number) {
     return this.likeRepository.find({
       where: { userId: userId },
       relations: ['project'],
+      order: { project: { createdAt: 'DESC' } },
+      skip: page ? (page - 1) * 10 : null,
+      take: pageSize ? pageSize : 10,
     });
   }
 
