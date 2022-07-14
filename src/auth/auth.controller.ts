@@ -64,7 +64,6 @@ export class AuthController {
   async isMatchWithRegisteredUser(@Query() query, @Request() req) {
     const { userId } = req.user;
     const { email, phoneNumber } = query;
-    console.log(`email : ${email} phoneNumber : ${phoneNumber}`);
     return await this.authService.isMatchWithRegisteredUser(
       email,
       phoneNumber,
