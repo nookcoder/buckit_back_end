@@ -18,8 +18,6 @@ import { AppController } from './app.controller';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from './project/entities/category.entity';
 import { OrderDetail } from './order/entities/order-detail.entity';
-import { ScheduleModule } from '@nestjs/schedule';
-import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 
 @Module({
   imports: [
