@@ -1,22 +1,35 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  RelationId,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { IsEnum } from 'class-validator';
 import { Project } from '../../project/entities/project.entity';
+import { OrderDetail } from './order-detail.entity';
 
-enum OrderStatus {
+export enum OrderStatus {
   // 입금 대기
-  DepositWaiting = 'depositWaiting',
-  // 추가 입금 대기 -> 입금한 금액이 부족할 때 (보류)
-  AdditionalDepositWaiting = 'additionalDepositWaiting',
+  DepositWaiting,
   // 입금 완료
-  DepositCompleted = 'depositCompleted',
+  DepositCompleted,
   // 결재 완료
-  PaymentCompleted = 'paymentCompleted',
+  PaymentCompleted,
 }
 
 @Entity()
 export class Order extends CoreEntity {
+  // todo : API 달고 넣어야되나
+  @Column({ unique: true, nullable: true })
+  orderNumber: string;
+
+  @Column('boolean', { default: false })
+  expired: boolean;
+
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
 
@@ -29,7 +42,20 @@ export class Order extends CoreEntity {
   @RelationId((order: Order) => order.project)
   projectId: number;
 
-  @Column({ type: 'enum', enum: OrderStatus })
+  @Column({
+    type: 'enum',
+    enum: OrderStatus,
+    default: OrderStatus.DepositWaiting,
+  })
   @IsEnum(OrderStatus)
   status: OrderStatus;
+
+  @OneToOne((type) => OrderDetail, (orderDetail) => orderDetail.order)
+  @Column('simple-json')
+  orderDetail: OrderDetail;
+
+  @BeforeInsert()
+  async createOrderNumber() {
+    this.orderNumber = Date.now().toString(16).toUpperCase();
+  }
 }
