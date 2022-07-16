@@ -7,6 +7,7 @@ import { Order, OrderStatus } from './entities/order.entity';
 import { OrderDetail } from './entities/order-detail.entity';
 import { CreateOrderDetail } from './dto/create-order-detail.dto';
 import { CreateOrderOutput } from './dto/create-order.dto';
+import { BeforePaymentProject } from './dto/before-payment-project.dto';
 
 @Injectable()
 export class OrderService {
@@ -21,7 +22,9 @@ export class OrderService {
     private readonly orderDetailRepository: Repository<OrderDetail>
   ) {}
 
-  async getProjectsBeforePayment(userId: number) {
+  async getProjectsBeforePayment(
+    userId: number
+  ): Promise<Array<BeforePaymentProject>> {
     const orders = await this.orderRepository.find({
       where: {
         user: {
@@ -30,7 +33,27 @@ export class OrderService {
         status: OrderStatus.DepositWaiting,
       },
       relations: ['project', 'orderDetail'],
+      order: {
+        createdAt: 'ASC',
+      },
     });
+    const projectsBeforePayment: Array<BeforePaymentProject> = [];
+    for (const order of orders) {
+      const project: BeforePaymentProject = {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        address: order.project.address,
+        deadline: order.project.deadline,
+        orderCreatedAt: order.createdAt,
+        soldQuarter: order.project.soldQuarter,
+        thumbnailImageUrl: order.project.thumbnailImage,
+        title: order.project.title,
+        total: order.project.total,
+        totalQuarter: order.project.totalQuarter,
+      };
+      projectsBeforePayment.push(project);
+    }
+    return projectsBeforePayment;
   }
 
   async createOrder(
