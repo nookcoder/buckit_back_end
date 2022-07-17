@@ -14,8 +14,9 @@ import { Category } from './category.entity';
 
 export enum ProjectStatus {
   Before = 'before',
-  PROGRESS = 'progress',
-  END = 'end',
+  FundingPROGRESS = 'progress',
+  FundingEnd = 'end',
+  Opening = 'opening',
 }
 
 @Entity()

@@ -20,6 +20,14 @@ export class OrderController {
     return await this.orderService.getProjectsBeforePayment(userId);
   }
 
+  // 결재 완료 프로젝트
+  @UseGuards(JwtAuthGuard)
+  @Get('/projects/completion')
+  async getProjectsPaymentCompleted(@Request() req) {
+    const { userId } = req.user;
+    return await this.orderService.getProjectsPaymentCompleted(userId);
+  }
+
   // 주문 생성
   @UseGuards(JwtAuthGuard)
   @Post()
