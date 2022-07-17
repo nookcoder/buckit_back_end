@@ -63,7 +63,9 @@ export class OrderService {
   ): Promise<Array<PaymentCompletedProject>> {
     const orders: Order[] = await this.orderRepository.find({
       where: {
-        userId: userId,
+        user: {
+          id: userId,
+        },
         status: OrderStatus.PaymentCompleted,
       },
       relations: ['project', 'orderDetail'],

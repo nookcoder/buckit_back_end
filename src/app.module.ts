@@ -18,6 +18,7 @@ import { AppController } from './app.controller';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from './project/entities/category.entity';
 import { OrderDetail } from './order/entities/order-detail.entity';
+import { ProfitModule } from './profit/profit.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { OrderDetail } from './order/entities/order-detail.entity';
       database: process.env.DB_DATABASE,
       entities: [User, Project, Like, Order, Category, OrderDetail],
       synchronize: true,
+      useUTC: true,
     }),
     // todo : Task Schedule 은 나중에 업뎃
     // ScheduleModule.forRoot(),
@@ -57,6 +59,7 @@ import { OrderDetail } from './order/entities/order-detail.entity';
     LikeModule,
     AuthModule,
     OrderModule,
+    ProfitModule,
     // TaskSchedulingModule,
   ],
   controllers: [AppController],
