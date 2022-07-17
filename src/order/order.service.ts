@@ -8,6 +8,7 @@ import { OrderDetail } from './entities/order-detail.entity';
 import { CreateOrderDetail } from './dto/create-order-detail.dto';
 import { CreateOrderOutput } from './dto/create-order.dto';
 import { BeforePaymentProject } from './dto/before-payment-project.dto';
+import { PaymentCompletedProject } from './dto/payment-completed-project.dto';
 
 @Injectable()
 export class OrderService {
@@ -25,7 +26,7 @@ export class OrderService {
   async getProjectsBeforePayment(
     userId: number
   ): Promise<Array<BeforePaymentProject>> {
-    const orders = await this.orderRepository.find({
+    const orders: Order[] = await this.orderRepository.find({
       where: {
         user: {
           id: userId,
@@ -55,6 +56,44 @@ export class OrderService {
       projectsBeforePayment.push(project);
     }
     return projectsBeforePayment;
+  }
+
+  async getProjectsPaymentCompleted(
+    userId: number
+  ): Promise<Array<PaymentCompletedProject>> {
+    const orders: Order[] = await this.orderRepository.find({
+      where: {
+        userId: userId,
+        status: OrderStatus.PaymentCompleted,
+      },
+      relations: ['project', 'orderDetail'],
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+    const projectsPaymentCompleted: Array<PaymentCompletedProject> = [];
+    for (const order of orders) {
+      const project: PaymentCompletedProject = {
+        address: order.project.address,
+        deadline: order.project.deadline,
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        orderUpdatedAt: order.updatedAt,
+        pricePerQuarter: order.project.pricePerQuarter,
+        projectId: order.project.id,
+        projectStatus: order.project.status,
+        qty: order.orderDetail.qty,
+        purchaseTotal: order.orderDetail.total,
+        soldQuarter: order.project.soldQuarter,
+        thumbnailImageUrl: order.project.thumbnailImage,
+        title: order.project.title,
+        total: order.project.total,
+        totalQuarter: order.project.totalQuarter,
+      };
+      projectsPaymentCompleted.push(project);
+    }
+
+    return projectsPaymentCompleted;
   }
 
   async createOrder(
