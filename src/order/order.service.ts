@@ -41,6 +41,7 @@ export class OrderService {
     for (const order of orders) {
       const project: BeforePaymentProject = {
         orderId: order.id,
+        projectId: order.projectId,
         orderNumber: order.orderNumber,
         address: order.project.address,
         deadline: order.project.deadline,

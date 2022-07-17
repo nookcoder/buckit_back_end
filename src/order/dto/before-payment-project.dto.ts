@@ -1,5 +1,6 @@
 export class BeforePaymentProject {
   orderId: number;
+  projectId: number;
   orderNumber: string;
   thumbnailImageUrl: string;
   address: string;
