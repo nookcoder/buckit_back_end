@@ -15,6 +15,7 @@ import {
   UpdatePasswordOutput,
 } from './dto/update-password.dto';
 import { Like } from '../like/entities/like.entity';
+import { ResponseAndPrintError } from '../common/utils/error-message';
 
 @Injectable()
 export class UsersService {
@@ -64,13 +65,12 @@ export class UsersService {
 
   async updatePassword({
     password,
-    id,
+    phoneNumber,
   }: UpdatePasswordInput): Promise<UpdatePasswordOutput> {
     try {
       const user = await this.userRepository.findOne({
-        where: { id },
+        where: { phoneNumber },
       });
-      console.log(user);
       if (!user) {
         return {
           ok: false,
@@ -83,10 +83,7 @@ export class UsersService {
         ok: true,
       };
     } catch (e) {
-      return {
-        ok: false,
-        error: e,
-      };
+      ResponseAndPrintError(e);
     }
   }
 

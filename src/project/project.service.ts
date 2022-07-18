@@ -41,7 +41,7 @@ export class ProjectService {
     pageSize: number | undefined
   ): Promise<Project[] | GetAllProjectsOutput> {
     try {
-      const projects = await this.projectRepository.find({
+      const projects: Project[] = await this.projectRepository.find({
         where: {
           status: status,
         },
