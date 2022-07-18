@@ -6,6 +6,7 @@ export class InputCreateProjectBody extends PickType(Project, [
   'summary',
   'address',
   'deadline',
+  'fundingOpenDate',
   'status',
 ]) {
   total: string;
