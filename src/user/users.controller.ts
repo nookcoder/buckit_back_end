@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
-  Param,
   Post,
   Query,
   Request,
@@ -72,17 +71,15 @@ export class UsersController {
 
   /**
    * Update Password
-   * @param id
-   * @param input
+   * @param input : UpdatePasswordInput
    */
-  @Post('/:userId/password')
+  @Post('/update-password')
   async updatePassword(
-    @Param('userId') id,
     @Body() input: UpdatePasswordInput
   ): Promise<UpdatePasswordOutput> {
     return await this.userService.updatePassword({
       password: input.password,
-      id,
+      phoneNumber: input.phoneNumber,
     });
   }
 }

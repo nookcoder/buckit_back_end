@@ -41,7 +41,7 @@ export class ProjectService {
     pageSize: number | undefined
   ): Promise<Project[] | GetAllProjectsOutput> {
     try {
-      const projects = await this.projectRepository.find({
+      const projects: Project[] = await this.projectRepository.find({
         where: {
           status: status,
         },
@@ -101,14 +101,18 @@ export class ProjectService {
       const contentUrl = await uploadContentImages(projectUuid, files.content);
       const deadline: Date | typeof FORMAT_ERROR =
         this.createDateInstanceForDeadline(input.deadline);
+      const fundingOpenDate: Date | typeof FORMAT_ERROR =
+        this.createDateInstanceForDeadline(input.fundingOpenDate);
 
-      if (deadline === FORMAT_ERROR) {
+      if (deadline === FORMAT_ERROR || fundingOpenDate == FORMAT_ERROR) {
         return {
           ok: false,
-          error: 'Format of Deadline must be YYYY-MM-DD HH:MM:SS',
+          error:
+            'Format of Deadline or FundingOpenDate must be YYYY-MM-DD HH:MM:SS',
         };
       }
       input.deadline = deadline;
+      input.fundingOpenDate = fundingOpenDate;
 
       const category = await this.categoryRepository.getOrCreateCategory(
         input.category

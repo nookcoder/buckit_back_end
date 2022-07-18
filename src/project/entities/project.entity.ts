@@ -47,6 +47,9 @@ export class Project extends CoreEntity {
   @IsString()
   thumbnailImage: string;
 
+  @Column({ nullable: true })
+  fundingOpenDate: Date;
+
   @Column()
   deadline: Date;
 
