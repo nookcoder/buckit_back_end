@@ -11,3 +11,9 @@ export const UPLOAD_FIELDS = [
     maxCount: 10,
   },
 ];
+
+export enum OrderBy {
+  CREATED_AT,
+  DEAD_LINE,
+  LIKE,
+}
