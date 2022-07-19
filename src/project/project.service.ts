@@ -7,7 +7,7 @@ import {
   CreateProjectOutput,
 } from './dto/create-project.dto';
 import { validateDeadlineStringFormat } from './utils/validate';
-import { FORMAT_ERROR } from './utils/constants';
+import { FORMAT_ERROR, OrderBy } from './utils/constants';
 import { GetAllProjectsOutput, GetProjectOutput } from './dto/get-project.dto';
 import {
   UpdateProjectInput,
@@ -38,7 +38,8 @@ export class ProjectService {
   async getAllProjects(
     status: ProjectStatus | undefined,
     page: number | undefined,
-    pageSize: number | undefined
+    pageSize: number | undefined,
+    order: OrderBy | undefined
   ): Promise<Project[] | GetAllProjectsOutput> {
     try {
       let projects: Project[];
@@ -59,6 +60,11 @@ export class ProjectService {
           skip: page ? (page - 1) * 10 : null,
           take: pageSize ? pageSize : 10,
         });
+      }
+      if (order === OrderBy.LIKE) {
+        projects.sort((a, b) => b.likes.length - a.likes.length);
+      } else if (order === OrderBy.DEAD_LINE) {
+        projects.sort((a, b) => a.deadline.getTime() - b.deadline.getTime());
       }
       if (projects) {
         return {

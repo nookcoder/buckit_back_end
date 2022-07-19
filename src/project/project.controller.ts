@@ -19,7 +19,7 @@ import { UserRole } from '../user/entities/user.entity';
 import { UpdateProjectInput } from './dto/update-project.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
-import { UPLOAD_FIELDS } from './utils/constants';
+import { OrderBy, UPLOAD_FIELDS } from './utils/constants';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
@@ -31,9 +31,15 @@ export class ProjectController {
   async getAllProjects(
     @Query('status') status: ProjectStatus | undefined,
     @Query('page') page: number | undefined,
-    @Query('pageSize') pageSize: number | undefined
+    @Query('pageSize') pageSize: number | undefined,
+    @Query('order') order: OrderBy | undefined
   ): Promise<Project[] | CoreOutput> {
-    return await this.projectService.getAllProjects(status, page, pageSize);
+    return await this.projectService.getAllProjects(
+      status,
+      page,
+      pageSize,
+      order
+    );
   }
 
   @UseGuards(JwtAuthGuard)
