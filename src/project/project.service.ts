@@ -41,15 +41,25 @@ export class ProjectService {
     pageSize: number | undefined
   ): Promise<Project[] | GetAllProjectsOutput> {
     try {
-      const projects: Project[] = await this.projectRepository.find({
-        where: {
-          status: status,
-        },
-        relations: ['likes'],
-        order: { createdAt: 'DESC' },
-        skip: page ? (page - 1) * 10 : null,
-        take: pageSize ? pageSize : 10,
-      });
+      let projects: Project[];
+      if (status != ProjectStatus.Any) {
+        projects = await this.projectRepository.find({
+          where: {
+            status: status,
+          },
+          relations: ['likes'],
+          order: { createdAt: 'DESC' },
+          skip: page ? (page - 1) * 10 : null,
+          take: pageSize ? pageSize : 10,
+        });
+      } else {
+        projects = await this.projectRepository.find({
+          relations: ['likes'],
+          order: { createdAt: 'DESC' },
+          skip: page ? (page - 1) * 10 : null,
+          take: pageSize ? pageSize : 10,
+        });
+      }
       if (projects) {
         return {
           projects,
