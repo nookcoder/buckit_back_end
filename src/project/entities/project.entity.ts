@@ -13,6 +13,7 @@ import { Order } from '../../order/entities/order.entity';
 import { Category } from './category.entity';
 
 export enum ProjectStatus {
+  Any = 'any',
   Before = 'before',
   FundingPROGRESS = 'progress',
   FundingEnd = 'end',
