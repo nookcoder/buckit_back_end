@@ -25,6 +25,7 @@ export class LikeService {
       },
     });
 
+    // 프로젝트에 좋아요가 하나도 없을 때
     if (!likes) {
       await this.createLike(input);
       return {
@@ -32,6 +33,7 @@ export class LikeService {
       };
     }
 
+    // 프로젝트가 좋아요를 가지고 있고 해당 유저를 가지고 있지 않을 때
     const isExist = likes.find((like) => like.userId == input.userId);
     if (!isExist) {
       await this.createLike(input);
