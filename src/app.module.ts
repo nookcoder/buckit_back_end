@@ -19,6 +19,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Category } from './project/entities/category.entity';
 import { OrderDetail } from './order/entities/order-detail.entity';
 import { ProfitModule } from './profit/profit.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 
 @Module({
   imports: [
@@ -52,7 +54,7 @@ import { ProfitModule } from './profit/profit.module';
       useUTC: true,
     }),
     // todo : Task Schedule 은 나중에 업뎃
-    // ScheduleModule.forRoot(),
+    ScheduleModule.forRoot(),
     UsersModule,
     CommonModule,
     ProjectModule,
@@ -60,7 +62,7 @@ import { ProfitModule } from './profit/profit.module';
     AuthModule,
     OrderModule,
     ProfitModule,
-    // TaskSchedulingModule,
+    TaskSchedulingModule,
   ],
   controllers: [AppController],
   providers: [
