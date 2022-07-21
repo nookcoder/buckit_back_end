@@ -27,9 +27,7 @@
 name: Deploy to Amazon ECS
 
 on:
-  pull_request:
-    branches:
-      - "prod"
+  workflow_dispatch:
 
 env:
   AWS_REGION: ap-northeast-2
