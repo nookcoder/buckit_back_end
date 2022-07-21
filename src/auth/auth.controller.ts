@@ -38,6 +38,13 @@ export class AuthController {
     return await this.authService.signUp(createUserInput);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/check/password')
+  async checkOriginPassword(@Request() req, @Body('password') password) {
+    const { userId } = req.user;
+    return await this.authService.checkOriginPassword(userId, password);
+  }
+
   /**
    * Access token, Refresh Token 재발급
    * @param req
@@ -69,14 +76,5 @@ export class AuthController {
       phoneNumber,
       userId
     );
-  }
-
-  @Get('/okcert')
-  async okCert() {
-    const response = this.authService.okCert();
-    response.subscribe((res) => {
-      console.log(res);
-    });
-    return response;
   }
 }

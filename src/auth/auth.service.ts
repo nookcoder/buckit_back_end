@@ -12,7 +12,6 @@ import { ConfigService } from '@nestjs/config';
 import { CreateUserInput } from './dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
-import { map, Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -69,6 +68,27 @@ export class AuthService {
       return {
         ok: false,
         error: e,
+      };
+    }
+  }
+
+  async checkOriginPassword(userId, password): Promise<CoreOutput> {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      select: ['password'],
+    });
+    if (!user) {
+      return {
+        ok: false,
+        error: 'Not Found This User',
+      };
+    }
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return {
+        ok: true,
       };
     }
   }
@@ -144,12 +164,6 @@ export class AuthService {
         error: e,
       };
     }
-  }
-
-  okCert(): Observable<any> {
-    return this.httpService
-      .get('https://safe.ok-name.co.kr/gCEA/')
-      .pipe(map((response) => response.data));
   }
 
   // todo : refresh token 암호화 bcrypt 는 72자까지 밖에 안되서 항상 true 를 반환한다.
