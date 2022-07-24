@@ -82,9 +82,7 @@ export class Project extends CoreEntity {
   @IsNumber()
   expectedProfit: number;
 
-  @ManyToOne(() => Category, (category) => category.projects, {
-    nullable: true,
-  })
+  @ManyToOne(() => Category, (category) => category.projects)
   category: Category;
 
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
