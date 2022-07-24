@@ -55,7 +55,7 @@ export class ProjectService {
         });
       } else {
         projects = await this.projectRepository.find({
-          relations: ['likes'],
+          relations: ['likes', 'category'],
           order: { createdAt: 'DESC' },
           skip: page ? (page - 1) * 10 : null,
           take: pageSize ? pageSize : 10,
