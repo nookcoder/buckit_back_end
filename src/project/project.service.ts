@@ -48,7 +48,7 @@ export class ProjectService {
           where: {
             status: status,
           },
-          relations: ['likes'],
+          relations: ['likes', 'category'],
           order: { createdAt: 'DESC' },
           skip: page ? (page - 1) * 10 : null,
           take: pageSize ? pageSize : 10,
@@ -88,7 +88,7 @@ export class ProjectService {
     try {
       const project = await this.projectRepository.findOne({
         where: { id: projectId },
-        relations: ['likes'],
+        relations: ['likes', 'category'],
       });
       if (!project) {
         NotFoundEntity();
