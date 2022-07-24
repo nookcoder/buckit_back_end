@@ -52,6 +52,7 @@ export class OrderService {
         title: order.project.title,
         total: order.project.total,
         totalQuarter: order.project.totalQuarter,
+        category: order.project.category.name,
       };
       projectsBeforePayment.push(project);
     }

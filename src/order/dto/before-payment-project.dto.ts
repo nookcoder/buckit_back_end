@@ -10,4 +10,5 @@ export class BeforePaymentProject {
   totalQuarter: number;
   deadline: Date;
   orderCreatedAt: Date;
+  category: string;
 }
