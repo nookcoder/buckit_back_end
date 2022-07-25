@@ -87,6 +87,29 @@ export class UsersService {
     }
   }
 
+  async updatePasswordWithAccessToken(userId: number, password: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return {
+          ok: false,
+          error: 'Not Found this.user',
+        };
+      }
+
+      user.password = password;
+      await this.userRepository.save(user);
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      ResponseAndPrintError(e);
+    }
+  }
+
   async checkExistence({
     phoneNumber,
     email,
