@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Controller, Get, HttpCode, Render } from '@nestjs/common';
 
 @Controller('/api/v1')
 export class AppController {
