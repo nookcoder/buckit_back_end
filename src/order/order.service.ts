@@ -40,7 +40,6 @@ export class OrderService {
     });
     const projectsBeforePayment: Array<BeforePaymentProject> = [];
     for (const order of orders) {
-      console.log(order.project);
       const project: BeforePaymentProject = {
         orderId: order.id,
         projectId: order.projectId,
