@@ -84,7 +84,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/update-password/after-login')
+  @Post('/update-password/token')
   async updatePasswordWithAccessToken(
     @Request() req,
     @Body('password') password
