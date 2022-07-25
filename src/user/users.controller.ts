@@ -82,4 +82,17 @@ export class UsersController {
       phoneNumber: input.phoneNumber,
     });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/update-password/after-login')
+  async updatePasswordWithAccessToken(
+    @Request() req,
+    @Body('password') password
+  ) {
+    const { userId } = req.user;
+    return await this.userService.updatePasswordWithAccessToken(
+      userId,
+      password
+    );
+  }
 }
