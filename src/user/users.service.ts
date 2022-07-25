@@ -54,11 +54,11 @@ export class UsersService {
   }
 
   async getLikes(userId: number, page: number, pageSize: number) {
-    return this.likeRepository.find({
+    return await this.likeRepository.find({
       where: { userId: userId },
-      relations: ['project'],
+      relations: ['project', 'project.category'],
       order: { project: { createdAt: 'DESC' } },
-      skip: page ? (page - 1) * 10 : null,
+      skip: page ? (page - 1) * 10 : 1,
       take: pageSize ? pageSize : 10,
     });
   }
