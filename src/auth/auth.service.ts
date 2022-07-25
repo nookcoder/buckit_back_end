@@ -91,6 +91,10 @@ export class AuthService {
         ok: true,
       };
     }
+
+    return {
+      ok: true,
+    };
   }
 
   async refreshTokens(req: any) {
