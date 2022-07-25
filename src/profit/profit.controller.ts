@@ -21,5 +21,5 @@ export class ProfitController {
       phoneNumbers
     );
   }
-  // 프로젝트에 투자한 사람들에게 포인트 제공
+  // todo : 프로젝트에 투자한 사람들에게 포인트 제공
 }
