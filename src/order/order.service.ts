@@ -33,13 +33,14 @@ export class OrderService {
         },
         status: OrderStatus.DepositWaiting,
       },
-      relations: ['project', 'orderDetail'],
+      relations: ['project', 'orderDetail', 'project.category'],
       order: {
         createdAt: 'ASC',
       },
     });
     const projectsBeforePayment: Array<BeforePaymentProject> = [];
     for (const order of orders) {
+      console.log(order.project);
       const project: BeforePaymentProject = {
         orderId: order.id,
         projectId: order.projectId,
