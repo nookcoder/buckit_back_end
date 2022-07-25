@@ -21,6 +21,9 @@ import { OrderDetail } from './order/entities/order-detail.entity';
 import { ProfitModule } from './profit/profit.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
+import { PaymentModule } from './payment/payment.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -41,6 +44,10 @@ import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
         REFRESH_EXPIRES_IN: Joi.string().required(),
         AWS_BUCKET_NAME: Joi.string().required(),
       }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+      exclude: ['/api*'],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -63,6 +70,7 @@ import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
     OrderModule,
     ProfitModule,
     TaskSchedulingModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
