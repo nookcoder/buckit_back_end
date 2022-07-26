@@ -24,6 +24,10 @@ import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 import { PaymentModule } from './payment/payment.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { NotificationModule } from './notification/notification.module';
+import { NotificationCategory } from './notification/entity/notification-category.entity';
+import { NotificationDetail } from './notification/entity/notification-detail.entity';
+import { Notification } from './notification/entity/notification.entity';
 
 @Module({
   imports: [
@@ -56,7 +60,17 @@ import { join } from 'path';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Project, Like, Order, Category, OrderDetail],
+      entities: [
+        User,
+        Project,
+        Like,
+        Order,
+        Category,
+        OrderDetail,
+        Notification,
+        NotificationCategory,
+        NotificationDetail,
+      ],
       synchronize: true,
       useUTC: true,
     }),
@@ -71,6 +85,7 @@ import { join } from 'path';
     ProfitModule,
     TaskSchedulingModule,
     PaymentModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
