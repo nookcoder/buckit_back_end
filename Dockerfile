@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Install app dependencies
 COPY package*.json ./
+COPY client ./client
 
 RUN npm install
 # If you are building your code for production
@@ -24,6 +25,7 @@ FROM node:16-alpine as production
 WORKDIR /app
 
 COPY package*.json ./
+COPY client ./client
 
 RUN npm install --only=production
 
