@@ -23,6 +23,9 @@ export enum ProjectStatus {
 @Entity()
 export class Project extends CoreEntity {
   @Column()
+  uuid: string;
+
+  @Column()
   @IsString()
   title: string;
 
