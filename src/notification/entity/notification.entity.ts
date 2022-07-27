@@ -1,10 +1,18 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { NotificationCategory } from './notification-category.entity';
+import { NotificationDetail } from './notification-detail.entity';
 
 enum NotificationStatus {
   NOT_READ,
   READ,
+}
+
+export enum NotificationCategories {
+  NOTICE,
+  EVENT,
+  PROJECT,
+  USER_PAYMENT,
+  USER_PROFIT,
 }
 
 @Entity()
@@ -20,9 +28,9 @@ export class Notification extends CoreEntity {
   })
   notificationStatus: NotificationStatus;
 
-  @ManyToOne(
-    (type) => NotificationCategory,
-    (category) => category.notifications
-  )
-  category: NotificationCategory;
+  @Column({ type: 'enum', enum: NotificationCategories })
+  category: NotificationCategories;
+
+  @ManyToOne((type) => NotificationDetail, (detail) => detail.notifications)
+  detail: NotificationDetail;
 }

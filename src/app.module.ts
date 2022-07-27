@@ -25,7 +25,6 @@ import { PaymentModule } from './payment/payment.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
-import { NotificationCategory } from './notification/entity/notification-category.entity';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
 
@@ -68,7 +67,6 @@ import { Notification } from './notification/entity/notification.entity';
         Category,
         OrderDetail,
         Notification,
-        NotificationCategory,
         NotificationDetail,
       ],
       synchronize: true,

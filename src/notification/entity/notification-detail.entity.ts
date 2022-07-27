@@ -1,5 +1,6 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Notification } from './notification.entity';
 
 @Entity()
 export class NotificationDetail extends CoreEntity {
@@ -11,4 +12,7 @@ export class NotificationDetail extends CoreEntity {
 
   @Column({ nullable: true })
   url: string;
+
+  @OneToMany((type) => Notification, (notification) => notification.detail)
+  notifications: Notification[];
 }
