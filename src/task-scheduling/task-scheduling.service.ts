@@ -50,5 +50,7 @@ export class TaskSchedulingService {
   //   }
   // }
 
+  // todo : 3달이상 지난 알림 지우기
+
   // todo : 입금 완료 시 확인 완료 로직 추가 (금액이 맞는 지, 입금자명, 은행이 일치하는 지 확인할 것)
 }
