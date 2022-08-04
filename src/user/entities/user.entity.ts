@@ -69,6 +69,9 @@ export class User extends CoreEntity {
   @Exclude()
   refreshToken?: string;
 
+  @Column({ nullable: true, unique: true, select: false })
+  fcm?: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

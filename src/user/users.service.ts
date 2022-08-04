@@ -16,6 +16,7 @@ import {
 } from './dto/update-password.dto';
 import { Like } from '../like/entities/like.entity';
 import { ResponseAndPrintError } from '../common/utils/error-message';
+import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -147,5 +148,11 @@ export class UsersService {
       ok: true,
       existence: false,
     };
+  }
+
+  async updateFcmToken(userId: number, fcmToken: string) {
+    await this.userRepository.update(userId, {
+      fcm: fcmToken,
+    });
   }
 }

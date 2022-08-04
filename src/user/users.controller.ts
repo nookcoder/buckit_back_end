@@ -95,4 +95,12 @@ export class UsersController {
       password
     );
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/update-fcm')
+  async updateFCMToken(@Request() req) {
+    const { userId } = req.user;
+    const { fcm } = req.headers;
+    return await this.userService.updateFcmToken(userId, fcm);
+  }
 }
