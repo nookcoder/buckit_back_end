@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -24,11 +25,12 @@ export class AuthController {
   /**
    * Access Token, Refresh Token 발급
    * @param req
+   * @param res
    */
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    return await this.authService.login(req);
+  async login(@Request() req, @Res({ passthrough: true }) res) {
+    return await this.authService.login(req, res);
   }
 
   @Post('/sign-up')

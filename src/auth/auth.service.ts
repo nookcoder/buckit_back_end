@@ -13,6 +13,7 @@ import { CreateUserInput } from './dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
+import { response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,7 @@ export class AuthService {
     return null;
   }
 
-  async login(req: any) {
+  async login(req: any, res: any) {
     const { id, phoneNumber, role } = req.user;
     const { accessToken, refreshToken } = await this.getTokens(
       id,
@@ -44,7 +45,8 @@ export class AuthService {
       role
     );
     await this.updateRefreshToken(id, refreshToken);
-
+    res.cookie('jwt', accessToken, { httpOnly: true });
+    res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
