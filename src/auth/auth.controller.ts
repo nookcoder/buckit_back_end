@@ -50,11 +50,12 @@ export class AuthController {
   /**
    * Access token, Refresh Token 재발급
    * @param req
+   * @param res
    */
   @UseGuards(JwtRefreshAuthGuard)
   @Get('/refresh')
-  async refresh(@Request() req) {
-    return await this.authService.refreshTokens(req);
+  async refresh(@Request() req, @Res({ passthrough: true }) res) {
+    return await this.authService.refreshTokens(req, res);
   }
 
   /**
@@ -77,6 +78,17 @@ export class AuthController {
       email,
       phoneNumber,
       userId
+    );
+  }
+
+  @Get('/certification')
+  async certificateByIMP(@Query() query) {
+    const { imp_uid, merchant_uid, success } = query;
+    console.log(`${imp_uid}, ${merchant_uid}, ${success}`);
+    return await this.authService.certificateByIMP(
+      imp_uid,
+      merchant_uid,
+      success
     );
   }
 }
