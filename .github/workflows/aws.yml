@@ -34,7 +34,7 @@ env:
   ECR_REPOSITORY: buckit-prod           # set this to your Amazon ECR repository name
   ECS_SERVICE: buckit-prod-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: buckit-prod-cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: buckit-prod-task  # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: buckit-prod-td  # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/prod-task-definition.json
   CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
 

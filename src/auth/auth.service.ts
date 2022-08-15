@@ -13,6 +13,7 @@ import { CreateUserInput } from './dto/create-user.dto';
 import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
+import { IMPService } from './imp.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
+    private readonly impService: IMPService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) {}
@@ -36,7 +38,7 @@ export class AuthService {
     return null;
   }
 
-  async login(req: any) {
+  async login(req: any, res: any) {
     const { id, phoneNumber, role } = req.user;
     const { accessToken, refreshToken } = await this.getTokens(
       id,
@@ -44,7 +46,8 @@ export class AuthService {
       role
     );
     await this.updateRefreshToken(id, refreshToken);
-
+    res.cookie('jwt', accessToken, { httpOnly: true });
+    res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -97,7 +100,7 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(req: any) {
+  async refreshTokens(req: any, res: any) {
     const { userId, role, phoneNumber, refresh_token } = req.user;
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -117,6 +120,9 @@ export class AuthService {
       phoneNumber
     );
     await this.updateRefreshToken(userId, refreshToken);
+
+    res.cookie('jwt', accessToken, { httpOnly: true });
+    res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
 
     return {
       access_token: accessToken,
@@ -168,6 +174,17 @@ export class AuthService {
         error: e,
       };
     }
+  }
+
+  async certificateByIMP(imp_uid: string, merchant_uid, success) {
+    const { birthday, gender, name } = await this.impService.getUserInfoFromImp(
+      imp_uid
+    );
+    return {
+      birthday,
+      gender,
+      name,
+    };
   }
 
   // todo : refresh token 암호화 bcrypt 는 72자까지 밖에 안되서 항상 true 를 반환한다.

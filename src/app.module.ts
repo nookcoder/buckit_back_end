@@ -46,6 +46,8 @@ import { Notification } from './notification/entity/notification.entity';
         REFRESH_SECRET_KEY: Joi.string().required(),
         REFRESH_EXPIRES_IN: Joi.string().required(),
         AWS_BUCKET_NAME: Joi.string().required(),
+        IMP_REST_API_KEY: Joi.string().required(),
+        IMP_REST_SECRET_KEY: Joi.string().required(),
       }),
     }),
     ServeStaticModule.forRoot({
