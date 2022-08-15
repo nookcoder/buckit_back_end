@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { JwtRefreshStrategy } from './jwt/jwt-refresh.strategy';
 import { HttpModule } from '@nestjs/axios';
+import { IMPService } from './imp.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HttpModule } from '@nestjs/axios';
     JwtModule,
     JwtStrategy,
     JwtRefreshStrategy,
+    IMPService,
   ],
   controllers: [AuthController],
 })

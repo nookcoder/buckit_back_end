@@ -4,9 +4,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { RolesGuard } from './auth/roles/role.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
+import { initializeApp } from 'firebase-admin/app';
+import { credential } from 'firebase-admin';
+import applicationDefault = credential.applicationDefault;
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('Buckit API Docs')
     .setDescription('Buckit v1 API description')
@@ -21,6 +26,9 @@ async function bootstrap() {
   );
   app.useGlobalGuards(new RolesGuard(new JwtService(), new Reflector()));
   app.enableCors();
+  initializeApp({
+    credential: applicationDefault(),
+  });
   await app.listen(3000);
 }
 bootstrap();
