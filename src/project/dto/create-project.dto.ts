@@ -22,6 +22,7 @@ export class CreateProjectInput extends PickType(Project, [
   'status',
   'total',
   'pricePerQuarter',
+  'uuid',
 ]) {
   @IsString()
   @ApiProperty()

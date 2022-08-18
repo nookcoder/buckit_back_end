@@ -136,6 +136,7 @@ export class ProjectService {
 
       const newProject: CreateProjectInput = {
         ...input,
+        uuid: projectUuid,
         category: category,
         total: +input.total,
         thumbnailImage: thumbnailUrl,
