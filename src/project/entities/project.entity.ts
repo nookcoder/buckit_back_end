@@ -22,7 +22,7 @@ export enum ProjectStatus {
 
 @Entity()
 export class Project extends CoreEntity {
-  @Column()
+  @Column({ nullable: true })
   uuid: string;
 
   @Column()
