@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from '../order/entities/order.entity';
 import { Repository } from 'typeorm';
 import * as moment from 'moment';
 import { Project, ProjectStatus } from '../project/entities/project.entity';
@@ -9,8 +8,6 @@ import { Project, ProjectStatus } from '../project/entities/project.entity';
 @Injectable()
 export class TaskSchedulingService {
   constructor(
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>
   ) {}

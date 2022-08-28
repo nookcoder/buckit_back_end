@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
-import { Order } from '../../order/entities/order.entity';
 import { Category } from './category.entity';
+import { Order } from '../../order/entities/order.entity';
 
 export enum ProjectStatus {
   Any = 'any',
@@ -91,8 +91,7 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  // //todo : 주문 테이블, 좋아요, 카테고리
-  @OneToMany(() => Order, (order) => order.project, { nullable: true })
+  @OneToMany((type) => Order, (order) => order.projectId, { nullable: true })
   orders: Order[];
 
   @BeforeInsert()

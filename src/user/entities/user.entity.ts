@@ -1,10 +1,10 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Like } from '../../like/entities/like.entity';
-import { Order } from '../../order/entities/order.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
+import { Order } from '../../order/entities/order.entity';
 
 export enum UserRole {
   Client = 'client',
@@ -62,15 +62,15 @@ export class User extends CoreEntity {
   @OneToMany(() => Like, (like) => like.userId, { nullable: true })
   likes: Like[];
 
-  @OneToMany(() => Order, (order) => order.user, { nullable: true })
-  orders: Order[];
-
   @Column({ nullable: true, unique: true, select: false })
   @Exclude()
   refreshToken?: string;
 
   @Column({ nullable: true, unique: true, select: false })
   fcm?: string;
+
+  @OneToMany((type) => Order, (order) => order.userId, { nullable: true })
+  orders: Order[];
 
   @BeforeInsert()
   @BeforeUpdate()
