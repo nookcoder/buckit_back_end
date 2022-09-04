@@ -17,6 +17,7 @@ import { Project } from '../../project/entities/project.entity';
  * 승인 완료
  */
 export enum OrderStatusType {
+  BEFORE_PAYMENT,
   PENDING,
   APPROVAL,
 }
@@ -32,10 +33,14 @@ export class Orders extends CoreEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToOne((type) => User, (user) => user.orders)
+  @ManyToOne((type) => User, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
   user_id: number;
 
-  @ManyToOne((type) => Project, (project) => project.orders)
+  @ManyToOne((type) => Project, (project) => project.orders, {
+    onDelete: 'CASCADE',
+  })
   project_id: number;
 
   // 한 블럭당 가격
@@ -53,7 +58,7 @@ export class Orders extends CoreEntity {
   @Column({
     type: 'enum',
     enum: OrderStatusType,
-    default: OrderStatusType.PENDING,
+    default: OrderStatusType.BEFORE_PAYMENT,
   })
   order_status: String;
 

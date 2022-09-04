@@ -15,7 +15,7 @@ import { Orders } from '../../order/entities/order.entity';
 export enum ProjectStatus {
   Any = 'any',
   Before = 'before',
-  FundingPROGRESS = 'progress',
+  FUNDING_PROGRESS = 'progress',
   FundingEnd = 'end',
   Opening = 'opening',
 }
@@ -91,12 +91,18 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  @OneToMany((type) => Orders, (order) => order.project_id, { nullable: true })
+  @OneToMany((type) => Orders, (order) => order.project_id, {
+    nullable: true,
+    cascade: true,
+  })
   orders: Orders[];
 
   @BeforeInsert()
-  @BeforeUpdate()
   async calculateQuarter() {
     this.totalQuarter = this.total / this.pricePerQuarter;
+  }
+
+  async updateTotalQuarter(quarterQtyOrdered: number): Promise<number> {
+    return this.totalQuarter - quarterQtyOrdered;
   }
 }

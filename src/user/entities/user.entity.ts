@@ -69,7 +69,10 @@ export class User extends CoreEntity {
   @Column({ nullable: true, unique: true, select: false })
   fcm?: string;
 
-  @OneToMany((type) => Orders, (order) => order.user_id, { nullable: true })
+  @OneToMany((type) => Orders, (order) => order.user_id, {
+    nullable: true,
+    cascade: true,
+  })
   orders: Orders[];
 
   @BeforeInsert()
