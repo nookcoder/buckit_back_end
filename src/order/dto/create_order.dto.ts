@@ -1,8 +1,8 @@
 import { PickType } from '@nestjs/swagger';
-import { Order } from '../entities/order.entity';
+import { Orders } from '../entities/order.entity';
 import { CoreOutput } from '../../common/dto/core-output.dto';
 
-export class CreateOrderInput extends PickType(Order, [
+export class CreateOrderInput extends PickType(Orders, [
   'project_id',
   'quarter_qty',
 ]) {}

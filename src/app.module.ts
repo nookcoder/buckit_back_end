@@ -25,6 +25,7 @@ import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
+import { Orders } from './order/entities/order.entity';
 
 @Module({
   imports: [
@@ -66,9 +67,11 @@ import { Notification } from './notification/entity/notification.entity';
         Category,
         Notification,
         NotificationDetail,
+        Orders,
       ],
       synchronize: true,
       useUTC: true,
+      autoLoadEntities: true,
     }),
     // todo : Task Schedule 은 나중에 업뎃
     ScheduleModule.forRoot(),

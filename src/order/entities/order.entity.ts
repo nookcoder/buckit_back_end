@@ -1,5 +1,13 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import { BeforeInsert, Column, ManyToOne } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Project } from '../../project/entities/project.entity';
 
@@ -8,12 +16,22 @@ import { Project } from '../../project/entities/project.entity';
  * 결제 완료
  * 승인 완료
  */
-export enum OrderStatus {
+export enum OrderStatusType {
   PENDING,
-  Approval,
+  APPROVAL,
 }
 
-export class Order extends CoreEntity {
+@Entity()
+export class Orders extends CoreEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
   @ManyToOne((type) => User, (user) => user.orders)
   user_id: number;
 
@@ -32,7 +50,11 @@ export class Order extends CoreEntity {
   total_price: number;
 
   // 주문 상태
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: OrderStatusType,
+    default: OrderStatusType.PENDING,
+  })
   order_status: String;
 
   @BeforeInsert()

@@ -25,9 +25,12 @@ export class OrderController {
   @Post('/new')
   @UseGuards(JwtAuthGuard)
   async createOrder(
-    @Request() req: Request,
+    @Request() req,
     @Body() createOrderInput: CreateOrderInput
-  ) {}
+  ) {
+    const { userId } = req.user;
+    return await this.orderService.createNewOrder(userId, createOrderInput);
+  }
 
   // 주문 취소
 }

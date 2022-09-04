@@ -4,7 +4,7 @@ import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Project } from '../project/entities/project.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create_order.dto';
-import { Order } from './entities/order.entity';
+import { Orders } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -13,11 +13,11 @@ export class OrderService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>
+    @InjectRepository(Orders)
+    private readonly orderRepository: Repository<Orders>
   ) {}
 
-  async createOrder(
+  async createNewOrder(
     userId: number,
     { project_id, quarter_qty }: CreateOrderInput
   ): Promise<CreateOrderOutput> {
@@ -46,7 +46,6 @@ export class OrderService {
 
       await this.orderRepository.save(newOrder);
     } catch (err) {
-      console.log(err);
       return {
         ok: false,
         error: err,

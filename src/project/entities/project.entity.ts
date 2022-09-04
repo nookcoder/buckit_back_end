@@ -10,7 +10,7 @@ import {
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
-import { Order } from '../../order/entities/order.entity';
+import { Orders } from '../../order/entities/order.entity';
 
 export enum ProjectStatus {
   Any = 'any',
@@ -91,8 +91,8 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  @OneToMany((type) => Order, (order) => order.projectId, { nullable: true })
-  orders: Order[];
+  @OneToMany((type) => Orders, (order) => order.project_id, { nullable: true })
+  orders: Orders[];
 
   @BeforeInsert()
   @BeforeUpdate()
