@@ -5,6 +5,10 @@ import { Repository } from 'typeorm';
 import { Project, ProjectStatus } from '../project/entities/project.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create_order.dto';
 import { Orders } from './entities/order.entity';
+import {
+  generateOrderCode,
+  handleErrorOfProject,
+} from '../common/utils/order-utils';
 
 @Injectable()
 export class OrderService {
@@ -28,10 +32,11 @@ export class OrderService {
         where: {
           id: project_id,
         },
-        relations: ['orders'],
+        relations: ['orders', 'category'],
       });
-      this.handleErrorOfProject(project, quarter_qty);
+      handleErrorOfProject(project, quarter_qty);
 
+      const orderCode = generateOrderCode(project.category.name, quarter_qty);
       // 새로운 주문 생성
       const order = await this.orderRepository.save(
         this.orderRepository.create({
@@ -39,12 +44,13 @@ export class OrderService {
           project_id: project_id,
           quarter_price: project.pricePerQuarter,
           quarter_qty: quarter_qty,
+          order_code: orderCode,
         })
       );
 
       // 프로젝트 업데이트
       project.orders.push(order);
-      project.totalQuarter -= quarter_qty;
+      project.soldQuarter += quarter_qty;
       await this.projectRepository.save(project);
 
       const user = await this.userRepository.findOne({
@@ -59,6 +65,7 @@ export class OrderService {
 
       return {
         ok: true,
+        order_code: orderCode,
       };
     } catch (err) {
       this.logger.error(`
@@ -71,21 +78,6 @@ export class OrderService {
         ok: false,
         error: "Couldn't create the Order",
       };
-    }
-  }
-
-  handleErrorOfProject(
-    project: Project | undefined,
-    quarterQty: number | null
-  ): void | Error {
-    if (!project) {
-      throw new Error('Not Found This Project');
-    } else if (project && project.status !== ProjectStatus.FUNDING_PROGRESS) {
-      throw new Error("Can't Funding Now");
-    } else if (project.totalQuarter < quarterQty) {
-      throw new Error('Not Enough Block');
-    } else {
-      return;
     }
   }
 }

@@ -91,7 +91,7 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  @OneToMany((type) => Orders, (order) => order.project_id, {
+  @OneToMany((type) => Orders, (order) => order.project, {
     nullable: true,
     cascade: true,
   })

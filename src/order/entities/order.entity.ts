@@ -6,6 +6,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
@@ -17,31 +18,30 @@ import { Project } from '../../project/entities/project.entity';
  * 승인 완료
  */
 export enum OrderStatusType {
-  BEFORE_PAYMENT,
   PENDING,
   APPROVAL,
 }
 
 @Entity()
 export class Orders extends CoreEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
   @ManyToOne((type) => User, (user) => user.orders, {
     onDelete: 'CASCADE',
   })
+  user: User;
+
+  @RelationId((self: Orders) => self.user)
   user_id: number;
 
   @ManyToOne((type) => Project, (project) => project.orders, {
     onDelete: 'CASCADE',
   })
+  project: number;
+
+  @RelationId((self: Orders) => self.project)
   project_id: number;
+
+  @Column()
+  order_code: string;
 
   // 한 블럭당 가격
   @Column()
@@ -58,9 +58,9 @@ export class Orders extends CoreEntity {
   @Column({
     type: 'enum',
     enum: OrderStatusType,
-    default: OrderStatusType.BEFORE_PAYMENT,
+    default: OrderStatusType.PENDING,
   })
-  order_status: String;
+  order_status: OrderStatusType;
 
   @BeforeInsert()
   calculateTotalPrice() {

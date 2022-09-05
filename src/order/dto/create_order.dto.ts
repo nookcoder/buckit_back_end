@@ -7,4 +7,6 @@ export class CreateOrderInput extends PickType(Orders, [
   'quarter_qty',
 ]) {}
 
-export class CreateOrderOutput extends CoreOutput {}
+export class CreateOrderOutput extends CoreOutput {
+  order_code?: string;
+}
