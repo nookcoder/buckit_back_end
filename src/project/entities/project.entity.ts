@@ -4,6 +4,7 @@ import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
 import { Orders } from '../../funding/entities/order.entity';
+import { FinancialStatement } from './financial-statements.entity';
 
 export enum ProjectStatus {
   Any = 'any',
@@ -89,6 +90,12 @@ export class Project extends CoreEntity {
     cascade: true,
   })
   orders: Orders[];
+
+  @OneToMany(
+    (type) => FinancialStatement,
+    (financialStatement) => financialStatement.project
+  )
+  financialStatements: FinancialStatement[];
 
   @BeforeInsert()
   async calculateQuarter() {
