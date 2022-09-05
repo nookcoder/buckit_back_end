@@ -1,16 +1,9 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
-import { Orders } from '../../order/entities/order.entity';
+import { Orders } from '../../funding/entities/order.entity';
 
 export enum ProjectStatus {
   Any = 'any',

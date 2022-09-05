@@ -4,7 +4,7 @@ import { Like } from '../../like/entities/like.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
-import { Orders } from '../../order/entities/order.entity';
+import { Orders } from '../../funding/entities/order.entity';
 
 export enum UserRole {
   Client = 'client',
