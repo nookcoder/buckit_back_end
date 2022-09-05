@@ -2,13 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Project, ProjectStatus } from '../project/entities/project.entity';
+import { Project } from '../project/entities/project.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create_order.dto';
 import { Orders } from './entities/order.entity';
 import {
   generateOrderCode,
   handleErrorOfProject,
 } from '../common/utils/order-utils';
+import { CancelOrderOutput } from './dto/cancel-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -77,6 +78,49 @@ export class OrderService {
       return {
         ok: false,
         error: "Couldn't create the Order",
+      };
+    }
+  }
+
+  async cancelOrder(
+    userId: number,
+    orderCode: string
+  ): Promise<CancelOrderOutput> {
+    try {
+      const order = await this.orderRepository.findOne({
+        where: {
+          order_code: orderCode,
+        },
+      });
+
+      if (order.user_id !== userId) {
+        this.logger.error(
+          `request user id = ${userId}, owner id = ${order.user_id}`
+        );
+        return {
+          ok: false,
+          error: "Don't have auth",
+        };
+      }
+
+      const project = await this.projectRepository.findOne({
+        where: {
+          id: order.project_id,
+        },
+      });
+
+      await this.projectRepository.update(project.id, {
+        soldQuarter: project.soldQuarter - order.quarter_qty,
+      });
+
+      await this.orderRepository.delete(order.id);
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      return {
+        ok: false,
+        error: err,
       };
     }
   }
