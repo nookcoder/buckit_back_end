@@ -16,7 +16,6 @@ import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from './project/entities/category.entity';
-import { ProfitModule } from './profit/profit.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 import { PaymentModule } from './payment/payment.module';
@@ -27,6 +26,11 @@ import { NotificationDetail } from './notification/entity/notification-detail.en
 import { Notification } from './notification/entity/notification.entity';
 import { Orders } from './funding/entities/order.entity';
 import { Payment } from './payment/entities/payment.entity';
+import { Share } from './funding/entities/share.entity';
+import { Dividend } from './funding/entities/dividend.entity';
+import { Account } from './user/entities/account.entity';
+import { AccountHistory } from './user/entities/account-history.entity';
+import { FinancialStatement } from './project/entities/financial-statements.entity';
 
 @Module({
   imports: [
@@ -69,7 +73,10 @@ import { Payment } from './payment/entities/payment.entity';
         Notification,
         NotificationDetail,
         Orders,
-        Payment,
+        Share,
+        Dividend,
+        Account,
+        AccountHistory,
       ],
       synchronize: true,
       useUTC: true,
@@ -83,10 +90,10 @@ import { Payment } from './payment/entities/payment.entity';
     LikeModule,
     AuthModule,
     FundingModule,
-    ProfitModule,
     TaskSchedulingModule,
     PaymentModule,
     NotificationModule,
+    FinancialStatement,
   ],
   controllers: [AppController],
   providers: [
