@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 import { Project } from './project/entities/project.entity';
 import { Like } from './like/entities/like.entity';
-import { OrderModule } from './order/order.module';
+import { FundingModule } from './funding/funding.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
@@ -25,7 +25,8 @@ import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
-import { Orders } from './order/entities/order.entity';
+import { Orders } from './funding/entities/order.entity';
+import { Payment } from './payment/entities/payment.entity';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { Orders } from './order/entities/order.entity';
         Notification,
         NotificationDetail,
         Orders,
+        Payment,
       ],
       synchronize: true,
       useUTC: true,
@@ -80,7 +82,7 @@ import { Orders } from './order/entities/order.entity';
     ProjectModule,
     LikeModule,
     AuthModule,
-    OrderModule,
+    FundingModule,
     ProfitModule,
     TaskSchedulingModule,
     PaymentModule,

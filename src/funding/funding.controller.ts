@@ -8,12 +8,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { OrderService } from './order.service';
+import { OrderService } from './funding.service';
 import { CreateOrderInput } from './dto/create_order.dto';
 import { CancelOrderInput } from './dto/cancel-order.dto';
 
-@Controller('/api/v1/order')
-export class OrderController {
+@Controller('/api/v1/funding')
+export class FundingController {
   constructor(private readonly orderService: OrderService) {}
 
   // 주문 생성
@@ -45,6 +45,6 @@ export class OrderController {
 
   @Get('/:orderCode')
   async getOrder() {}
-  // todo : 결재 성공 시 orderStatus 변경, 실패 시 order 삭제 -> subscribe 사용
+  // todo : 결재 성공 시 orderStatus 변경, 실패 시 funding 삭제 -> subscribe 사용
   // 주문 취소
 }

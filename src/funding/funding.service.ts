@@ -12,7 +12,7 @@ import {
 import { CancelOrderOutput } from './dto/cancel-order.dto';
 
 @Injectable()
-export class OrderService {
+export class FundingService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -22,7 +22,7 @@ export class OrderService {
     private readonly orderRepository: Repository<Orders>
   ) {}
 
-  private readonly logger = new Logger(OrderService.name);
+  private readonly logger = new Logger(FundingService.name);
 
   async createNewOrder(
     userId: number,
