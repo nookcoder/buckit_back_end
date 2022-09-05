@@ -5,6 +5,7 @@ import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
 import { Orders } from '../../funding/entities/order.entity';
 import { FinancialStatement } from './financial-statements.entity';
+import { Share } from '../../funding/entities/share.entity';
 
 export enum ProjectStatus {
   Any = 'any',
@@ -96,6 +97,9 @@ export class Project extends CoreEntity {
     (financialStatement) => financialStatement.project
   )
   financialStatements: FinancialStatement[];
+
+  @OneToMany((type) => Share, (share) => share.project, { cascade: true })
+  shareHolders: Share[];
 
   @BeforeInsert()
   async calculateQuarter() {

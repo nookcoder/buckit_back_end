@@ -8,13 +8,13 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { OrderService } from './funding.service';
+import { FundingService } from './funding.service';
 import { CreateOrderInput } from './dto/create_order.dto';
 import { CancelOrderInput } from './dto/cancel-order.dto';
 
 @Controller('/api/v1/funding')
 export class FundingController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly fundingService: FundingService) {}
 
   // 주문 생성
   // user -> get from access tokens
@@ -30,14 +30,14 @@ export class FundingController {
     @Body() createOrderInput: CreateOrderInput
   ) {
     const { userId } = req.user;
-    return await this.orderService.createNewOrder(userId, createOrderInput);
+    return await this.fundingService.createNewOrder(userId, createOrderInput);
   }
 
   @Delete('/cancel')
   @UseGuards(JwtAuthGuard)
   async cancelOrder(@Request() req, @Body() { order_code }: CancelOrderInput) {
     const { userId } = req.user;
-    return await this.orderService.cancelOrder(userId, order_code);
+    return await this.fundingService.cancelOrder(userId, order_code);
   }
 
   @Get('/all')

@@ -6,11 +6,21 @@ import { Like } from '../like/entities/like.entity';
 import { ProjectService } from './project.service';
 import { CategoryRepository } from './repository/category.repository';
 import { Category } from './entities/category.entity';
-import { Orders } from '../order/entities/order.entity';
+import { Orders } from '../funding/entities/order.entity';
+import { ProjectEventsService } from './events/project-events.service';
+import { FinancialStatement } from './entities/financial-statements.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project, Like, Category, Orders])],
-  providers: [ProjectService, CategoryRepository],
+  imports: [
+    TypeOrmModule.forFeature([
+      Project,
+      Like,
+      Category,
+      Orders,
+      FinancialStatement,
+    ]),
+  ],
+  providers: [ProjectService, CategoryRepository, ProjectEventsService],
   controllers: [ProjectController],
 })
 export class ProjectModule {}
