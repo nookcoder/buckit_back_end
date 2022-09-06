@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 import { Project } from './project/entities/project.entity';
 import { Like } from './like/entities/like.entity';
-import { FundingModule } from './funding/funding.module';
+import { OrderModule } from './order/order.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
@@ -24,13 +24,13 @@ import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
-import { Orders } from './funding/entities/order.entity';
-import { Payment } from './payment/entities/payment.entity';
-import { Share } from './funding/entities/share.entity';
-import { Dividend } from './funding/entities/dividend.entity';
+import { Orders } from './order/entities/order.entity';
+import { Share } from './order/entities/share.entity';
+import { Dividend } from './order/entities/dividend.entity';
 import { Account } from './user/entities/account.entity';
 import { AccountHistory } from './user/entities/account-history.entity';
 import { FinancialStatement } from './project/entities/financial-statements.entity';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -82,6 +82,7 @@ import { FinancialStatement } from './project/entities/financial-statements.enti
       useUTC: true,
       autoLoadEntities: true,
     }),
+    EventEmitterModule.forRoot(),
     // todo : Task Schedule 은 나중에 업뎃
     ScheduleModule.forRoot(),
     UsersModule,
@@ -89,7 +90,7 @@ import { FinancialStatement } from './project/entities/financial-statements.enti
     ProjectModule,
     LikeModule,
     AuthModule,
-    FundingModule,
+    OrderModule,
     TaskSchedulingModule,
     PaymentModule,
     NotificationModule,

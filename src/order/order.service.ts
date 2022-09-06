@@ -10,19 +10,23 @@ import {
   handleErrorOfProject,
 } from '../common/utils/order-utils';
 import { CancelOrderOutput } from './dto/cancel-order.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PaymentSuccessEvent } from './events/payment-success.event';
 
 @Injectable()
-export class FundingService {
+export class OrderService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(Orders)
-    private readonly orderRepository: Repository<Orders>
+    private readonly orderRepository: Repository<Orders>,
+
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
-  private readonly logger = new Logger(FundingService.name);
+  private readonly logger = new Logger(OrderService.name);
 
   async createNewOrder(
     userId: number,
@@ -82,6 +86,15 @@ export class FundingService {
     }
   }
 
+  async triggerPaymentSuccess(orderCode: string) {
+    const paymentSuccessEvent = new PaymentSuccessEvent();
+    paymentSuccessEvent.orderCode = orderCode;
+    this.eventEmitter.emit('payment.success', paymentSuccessEvent);
+    return {
+      ok: false,
+    };
+  }
+
   async cancelOrder(
     userId: number,
     orderCode: string
@@ -123,5 +136,27 @@ export class FundingService {
         error: err,
       };
     }
+  }
+
+  async updateOrder(orderId: number, partialEntity: any) {
+    await this.orderRepository.update(orderId, partialEntity);
+    return;
+  }
+
+  async findOrderByOrderCode(orderCode: string): Promise<Orders | null> {
+    const order = await this.orderRepository.findOne({
+      where: {
+        order_code: orderCode,
+      },
+    });
+
+    if (!order) {
+      this.logger.error(`
+        message : Can't Find order (order_code = ${orderCode}
+      `);
+      return null;
+    }
+
+    return order;
   }
 }
