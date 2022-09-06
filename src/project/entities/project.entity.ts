@@ -3,9 +3,9 @@ import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
-import { Orders } from '../../funding/entities/order.entity';
+import { Orders } from '../../order/entities/order.entity';
 import { FinancialStatement } from './financial-statements.entity';
-import { Share } from '../../funding/entities/share.entity';
+import { Share } from '../../order/entities/share.entity';
 
 export enum ProjectStatus {
   Any = 'any',

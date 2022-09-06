@@ -1,12 +1,5 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToOne,
-  RelationId,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Project } from '../../project/entities/project.entity';
 

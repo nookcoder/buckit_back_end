@@ -11,8 +11,8 @@ import { Like } from '../../like/entities/like.entity';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
-import { Orders } from '../../funding/entities/order.entity';
-import { Share } from '../../funding/entities/share.entity';
+import { Orders } from '../../order/entities/order.entity';
+import { Share } from '../../order/entities/share.entity';
 import { Account } from './account.entity';
 
 export enum UserRole {

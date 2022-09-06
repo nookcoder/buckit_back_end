@@ -6,7 +6,7 @@ import { Like } from '../like/entities/like.entity';
 import { ProjectService } from './project.service';
 import { CategoryRepository } from './repository/category.repository';
 import { Category } from './entities/category.entity';
-import { Orders } from '../funding/entities/order.entity';
+import { Orders } from '../order/entities/order.entity';
 import { ProjectEventsService } from './events/project-events.service';
 import { FinancialStatement } from './entities/financial-statements.entity';
 
