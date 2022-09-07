@@ -13,10 +13,6 @@ export class Dividend extends CoreEntity {
   @IsNumber()
   total_dividend: number;
 
-  @Column()
-  @IsNumber()
-  quarter_qty: number;
-
   @ManyToOne((type) => Share, (share) => share.dividends, {
     onDelete: 'CASCADE',
   })

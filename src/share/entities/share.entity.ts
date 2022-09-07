@@ -7,6 +7,10 @@ import { Dividend } from './dividend.entity';
 
 @Entity()
 export class Share extends CoreEntity {
+  @Column('int')
+  @IsNumber()
+  total_share_number: number;
+
   @ManyToOne((type) => Project, (project) => project.shareHolders, {
     onDelete: 'CASCADE',
   })
@@ -25,6 +29,7 @@ export class Share extends CoreEntity {
 
   @OneToMany((type) => Dividend, (dividend) => dividend.share, {
     cascade: true,
+    nullable: true,
   })
   dividends: Dividend[];
 }

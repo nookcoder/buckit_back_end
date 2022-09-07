@@ -5,7 +5,7 @@ import { Like } from '../../like/entities/like.entity';
 import { Category } from './category.entity';
 import { Orders } from '../../order/entities/order.entity';
 import { FinancialStatement } from './financial-statements.entity';
-import { Share } from '../../order/entities/share.entity';
+import { Share } from '../../share/entities/share.entity';
 
 export enum ProjectStatus {
   Any = 'any',

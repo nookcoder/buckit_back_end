@@ -12,7 +12,7 @@ import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { Orders } from '../../order/entities/order.entity';
-import { Share } from '../../order/entities/share.entity';
+import { Share } from '../../share/entities/share.entity';
 import { Account } from './account.entity';
 
 export enum UserRole {

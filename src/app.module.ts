@@ -25,12 +25,13 @@ import { NotificationModule } from './notification/notification.module';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
 import { Orders } from './order/entities/order.entity';
-import { Share } from './order/entities/share.entity';
-import { Dividend } from './order/entities/dividend.entity';
+import { Share } from './share/entities/share.entity';
+import { Dividend } from './share/entities/dividend.entity';
 import { Account } from './user/entities/account.entity';
 import { AccountHistory } from './user/entities/account-history.entity';
 import { FinancialStatement } from './project/entities/financial-statements.entity';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ShareModule } from './share/share.module';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     PaymentModule,
     NotificationModule,
     FinancialStatement,
+    ShareModule,
   ],
   controllers: [AppController],
   providers: [
