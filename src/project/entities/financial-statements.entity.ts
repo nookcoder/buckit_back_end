@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Project } from './project.entity';
 
@@ -7,7 +7,7 @@ export class FinancialStatement extends CoreEntity {
   @Column()
   total_revenue: number;
 
-  @Column()
+  @Column({ nullable: true })
   operating_profit: number;
 
   @Column({ nullable: true })
@@ -15,6 +15,9 @@ export class FinancialStatement extends CoreEntity {
 
   @Column()
   total_dividend: number;
+
+  @Column()
+  statement_code: string;
 
   @ManyToOne((type) => Project, (project) => project.financialStatements)
   project: Project;

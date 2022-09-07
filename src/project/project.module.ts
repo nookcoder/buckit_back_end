@@ -22,5 +22,6 @@ import { FinancialStatement } from './entities/financial-statements.entity';
   ],
   providers: [ProjectService, CategoryRepository, ProjectEventsService],
   controllers: [ProjectController],
+  exports: [ProjectService],
 })
 export class ProjectModule {}
