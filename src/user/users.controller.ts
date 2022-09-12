@@ -57,10 +57,11 @@ export class UsersController {
    * 있으면 return true, 없으면 return false,
    * @Query key : phoneNumber, email
    */
-  @Get('/check')
   @ApiOkResponse({
     type: CheckExistenceOutput,
+    description: '휴대폰 번호, 이메일 통해 DB 에 있는지 조회',
   })
+  @Get('/check')
   async checkDuplicate(
     @Query() query: UserCheckQuery
   ): Promise<CheckExistenceOutput> {
