@@ -1,15 +1,26 @@
-import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  RelationId,
+} from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Project } from '../../project/entities/project.entity';
 import { User } from '../../user/entities/user.entity';
 import { IsNumber } from 'class-validator';
 import { Dividend } from './dividend.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Share extends CoreEntity {
   @Column('int')
   @IsNumber()
   total_share_number: number;
+
+  @Column('varchar', { unique: true })
+  share_uuid: string;
 
   @ManyToOne((type) => Project, (project) => project.shareHolders, {
     onDelete: 'CASCADE',
@@ -32,4 +43,9 @@ export class Share extends CoreEntity {
     nullable: true,
   })
   dividends: Dividend[];
+
+  @BeforeInsert()
+  createShearUuid() {
+    this.share_uuid = uuidv4();
+  }
 }
