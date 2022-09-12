@@ -1,4 +1,7 @@
 import { PickType } from '@nestjs/swagger';
-import { User } from '../../user/entities/user.entity';
+import { CreateUserInput } from './create-user.dto';
 
-export class LoginInput extends PickType(User, ['phoneNumber', 'password']) {}
+export class LoginInput extends PickType(CreateUserInput, [
+  'phoneNumber',
+  'password',
+]) {}

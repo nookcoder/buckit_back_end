@@ -17,7 +17,10 @@ import {
   UpdatePasswordOutput,
 } from './dto/update-password.dto';
 import { Roles } from '../auth/roles/roles.decorator';
+import { UserCheckQuery } from '../auth/dto/user-check-query.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User API')
 @Controller('api/v1/users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
@@ -55,7 +58,12 @@ export class UsersController {
    * @Query key : phoneNumber, email
    */
   @Get('/check')
-  async checkDuplicate(@Query() query): Promise<CheckExistenceOutput> {
+  @ApiOkResponse({
+    type: CheckExistenceOutput,
+  })
+  async checkDuplicate(
+    @Query() query: UserCheckQuery
+  ): Promise<CheckExistenceOutput> {
     const phoneNumber = query['phoneNumber'];
     const email = query['email'];
     if (!phoneNumber && !email) {
