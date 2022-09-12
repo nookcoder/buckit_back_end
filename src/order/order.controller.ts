@@ -5,47 +5,52 @@ import {
   Request,
   Body,
   Get,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { OrderService } from './order.service';
+import { CreateOrderInput } from './dto/create_order.dto';
+import { CancelOrderInput } from './dto/cancel-order.dto';
 
 @Controller('/api/v1/order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
-  // 결제 전 프로젝트 정보
-  @UseGuards(JwtAuthGuard)
-  @Get('/projects')
-  async getProjectsBeforePayment(@Request() req) {
-    const { userId } = req.user;
-    return await this.orderService.getProjectsBeforePayment(userId);
-  }
-
-  // 결재 완료 프로젝트
-  @UseGuards(JwtAuthGuard)
-  @Get('/projects/completion')
-  async getProjectsPaymentCompleted(@Request() req) {
-    const { userId } = req.user;
-    return await this.orderService.getProjectsPaymentCompleted(userId);
-  }
 
   // 주문 생성
+  // user -> get from access tokens
+  // project id ->
+  // 블럭 당 가격 -> body
+  // 주문한 총 블럭 수
+  // 프로젝트 유무 판단
+  // subscribe 로 pending 수정
+  @Post('/new')
   @UseGuards(JwtAuthGuard)
-  @Post()
   async createOrder(
     @Request() req,
-    @Body('qty') qty: string,
-    @Body('projectId') projectId: string
+    @Body() createOrderInput: CreateOrderInput
   ) {
     const { userId } = req.user;
-
-    return await this.orderService.createOrder(userId, +projectId, +qty);
+    return await this.orderService.createNewOrder(userId, createOrderInput);
   }
-  // 입금 확인, API 연동후 Redirect로 쓰는 게 좋을 듯
-  @Post('/payment')
-  async completePayment() {}
-  // 취소 및 환불
+
+  @Post('/test/trigger/:order_code')
+  async triggerPaymentSuccess(@Param('order_code') orderCode: string) {
+    return this.orderService.triggerPaymentSuccess(orderCode);
+  }
+
+  @Delete('/cancel')
   @UseGuards(JwtAuthGuard)
-  @Post('/cancel')
-  async cancelPayment() {}
-  // 주문 상태 업데이트 - Batch
+  async cancelOrder(@Request() req, @Body() { order_code }: CancelOrderInput) {
+    const { userId } = req.user;
+    return await this.orderService.cancelOrder(userId, order_code);
+  }
+
+  @Get('/all')
+  async getAllOrders() {}
+
+  @Get('/:orderCode')
+  async getOrder() {}
+  // todo : 결재 성공 시 orderStatus 변경, 실패 시 order 삭제 -> subscribe 사용
+  // 주문 취소
 }

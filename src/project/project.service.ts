@@ -24,6 +24,11 @@ import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { CategoryRepository } from './repository/category.repository';
 import { Category } from './entities/category.entity';
+import {
+  CreateFinancialStatementInput,
+  CreateFinancialStatementOutput,
+} from './dto/create-financial-statement';
+import { FinancialStatement } from './entities/financial-statements.entity';
 
 @Injectable()
 export class ProjectService {
@@ -32,6 +37,8 @@ export class ProjectService {
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(Category)
     private readonly category: Repository<Category>,
+    @InjectRepository(FinancialStatement)
+    private readonly financialStatementRepository: Repository<FinancialStatement>,
     private readonly categoryRepository: CategoryRepository
   ) {}
 
@@ -155,6 +162,36 @@ export class ProjectService {
     }
   }
 
+  async createFinancialStatements(
+    input: CreateFinancialStatementInput
+  ): Promise<CreateFinancialStatementOutput> {
+    try {
+      const project = await this.projectRepository.findOne({
+        where: { id: input.project_id },
+      });
+      const statementCode = Date.now().toString(16).toUpperCase();
+
+      const { project_id, ...result } = input;
+      const financialStatement = this.financialStatementRepository.create({
+        ...result,
+        statement_code: statementCode,
+      });
+
+      financialStatement.project = project;
+      await this.financialStatementRepository.save(financialStatement);
+
+      return {
+        ok: true,
+        statementCode,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: e,
+      };
+    }
+  }
+
   async updateProject(
     projectId: number,
     input: UpdateProjectInput
@@ -220,6 +257,10 @@ export class ProjectService {
         error: e,
       };
     }
+  }
+
+  async updateProjectWithPartialEntity(projectId: number, partialEntity: any) {
+    return await this.projectRepository.update(projectId, partialEntity);
   }
 
   createDateInstanceForDeadline(deadLine: any): Date | typeof FORMAT_ERROR {

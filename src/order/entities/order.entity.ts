@@ -1,61 +1,55 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToOne,
-  RelationId,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { IsEnum } from 'class-validator';
 import { Project } from '../../project/entities/project.entity';
-import { OrderDetail } from './order-detail.entity';
 
-export enum OrderStatus {
-  // 입금 대기
-  DepositWaiting,
-  // 입금 완료
-  DepositCompleted,
-  // 결재 완료
-  PaymentCompleted,
+export enum OrderStatusType {
+  PENDING, // 결재 전
+  APPROVAL, // 결재 완료
 }
 
 @Entity()
-export class Order extends CoreEntity {
-  // todo : API 달고 넣어야되나
-  @Column({ unique: true, nullable: true })
-  orderNumber: string;
+export class Orders extends CoreEntity {
+  @Column()
+  order_code: string;
 
-  @Column('boolean', { default: false })
-  expired: boolean;
+  // 한 블럭당 가격
+  @Column()
+  quarter_price: number;
 
-  @ManyToOne(() => User, (user) => user.orders)
-  user: User;
+  // 주문한 총 블럭 수
+  @Column()
+  quarter_qty: number;
 
-  @RelationId((order: Order) => order.user)
-  userId: number;
+  @Column()
+  total_price: number;
 
-  @ManyToOne(() => Project, (project) => project.orders)
-  project: Project;
-
-  @RelationId((order: Order) => order.project)
-  projectId: number;
-
+  // 주문 상태
   @Column({
     type: 'enum',
-    enum: OrderStatus,
-    default: OrderStatus.DepositWaiting,
+    enum: OrderStatusType,
+    default: OrderStatusType.PENDING,
   })
-  @IsEnum(OrderStatus)
-  status: OrderStatus;
+  order_status: OrderStatusType;
 
-  @OneToOne((type) => OrderDetail, (orderDetail) => orderDetail.order)
-  @Column('simple-json')
-  orderDetail: OrderDetail;
+  @ManyToOne((type) => User, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
+  @RelationId((self: Orders) => self.user)
+  user_id: number;
+
+  @ManyToOne((type) => Project, (project) => project.orders, {
+    onDelete: 'CASCADE',
+  })
+  project: number;
+
+  @RelationId((self: Orders) => self.project)
+  project_id: number;
 
   @BeforeInsert()
-  async createOrderNumber() {
-    this.orderNumber = Date.now().toString(16).toUpperCase();
+  calculateTotalPrice() {
+    this.total_price = this.quarter_qty * this.quarter_price;
   }
 }

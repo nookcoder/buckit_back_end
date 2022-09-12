@@ -1,21 +1,16 @@
 import { CoreEntity } from '../../common/entities/core.entity';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 import { Like } from '../../like/entities/like.entity';
-import { Order } from '../../order/entities/order.entity';
 import { Category } from './category.entity';
+import { Orders } from '../../order/entities/order.entity';
+import { FinancialStatement } from './financial-statements.entity';
+import { Share } from '../../share/entities/share.entity';
 
 export enum ProjectStatus {
   Any = 'any',
   Before = 'before',
-  FundingPROGRESS = 'progress',
+  FUNDING_PROGRESS = 'progress',
   FundingEnd = 'end',
   Opening = 'opening',
 }
@@ -91,13 +86,27 @@ export class Project extends CoreEntity {
   @OneToMany(() => Like, (like) => like.project, { nullable: true })
   likes: Like[];
 
-  // //todo : 주문 테이블, 좋아요, 카테고리
-  @OneToMany(() => Order, (order) => order.project, { nullable: true })
-  orders: Order[];
+  @OneToMany((type) => Orders, (order) => order.project, {
+    nullable: true,
+    cascade: true,
+  })
+  orders: Orders[];
+
+  @OneToMany(
+    (type) => FinancialStatement,
+    (financialStatement) => financialStatement.project
+  )
+  financialStatements: FinancialStatement[];
+
+  @OneToMany((type) => Share, (share) => share.project, { cascade: true })
+  shareHolders: Share[];
 
   @BeforeInsert()
-  @BeforeUpdate()
   async calculateQuarter() {
     this.totalQuarter = this.total / this.pricePerQuarter;
+  }
+
+  async updateTotalQuarter(quarterQtyOrdered: number): Promise<number> {
+    return this.totalQuarter - quarterQtyOrdered;
   }
 }

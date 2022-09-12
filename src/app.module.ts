@@ -11,14 +11,11 @@ import * as Joi from 'joi';
 import { Project } from './project/entities/project.entity';
 import { Like } from './like/entities/like.entity';
 import { OrderModule } from './order/order.module';
-import { Order } from './order/entities/order.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles/role.guard';
 import { AppController } from './app.controller';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from './project/entities/category.entity';
-import { OrderDetail } from './order/entities/order-detail.entity';
-import { ProfitModule } from './profit/profit.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 import { PaymentModule } from './payment/payment.module';
@@ -27,6 +24,14 @@ import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
 import { NotificationDetail } from './notification/entity/notification-detail.entity';
 import { Notification } from './notification/entity/notification.entity';
+import { Orders } from './order/entities/order.entity';
+import { Share } from './share/entities/share.entity';
+import { Dividend } from './share/entities/dividend.entity';
+import { Account } from './user/entities/account.entity';
+import { AccountHistory } from './user/entities/account-history.entity';
+import { FinancialStatement } from './project/entities/financial-statements.entity';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ShareModule } from './share/share.module';
 
 @Module({
   imports: [
@@ -65,15 +70,20 @@ import { Notification } from './notification/entity/notification.entity';
         User,
         Project,
         Like,
-        Order,
         Category,
-        OrderDetail,
         Notification,
         NotificationDetail,
+        Orders,
+        Share,
+        Dividend,
+        Account,
+        AccountHistory,
       ],
       synchronize: true,
       useUTC: true,
+      autoLoadEntities: true,
     }),
+    EventEmitterModule.forRoot(),
     // todo : Task Schedule 은 나중에 업뎃
     ScheduleModule.forRoot(),
     UsersModule,
@@ -82,10 +92,11 @@ import { Notification } from './notification/entity/notification.entity';
     LikeModule,
     AuthModule,
     OrderModule,
-    ProfitModule,
     TaskSchedulingModule,
     PaymentModule,
     NotificationModule,
+    FinancialStatement,
+    ShareModule,
   ],
   controllers: [AppController],
   providers: [

@@ -22,6 +22,7 @@ import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { OrderBy, UPLOAD_FIELDS } from './utils/constants';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { CreateFinancialStatementInput } from './dto/create-financial-statement';
 
 @Controller('/api/v1/projects')
 export class ProjectController {
@@ -61,6 +62,11 @@ export class ProjectController {
     @Body() input: InputCreateProjectBody
   ) {
     return await this.projectService.createProject(files, input);
+  }
+
+  @Post('/financial-statement')
+  async createFinancialStatement(@Body() input: CreateFinancialStatementInput) {
+    return await this.projectService.createFinancialStatements(input);
   }
 
   /**
