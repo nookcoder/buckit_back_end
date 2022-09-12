@@ -88,7 +88,7 @@ export class OrderService {
 
   async triggerPaymentSuccess(orderCode: string) {
     const paymentSuccessEvent = new PaymentSuccessEvent();
-    const user = await this.userRepository.findOne({ where: { id: 1 } });
+    const user = await this.userRepository.findOne({ where: { id: 2 } });
     const project = await this.projectRepository.findOne({ where: { id: 1 } });
 
     paymentSuccessEvent.orderCode = orderCode;

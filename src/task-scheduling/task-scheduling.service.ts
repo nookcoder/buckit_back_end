@@ -31,22 +31,6 @@ export class TaskSchedulingService {
   //   }
   // }
 
-  // 1000 * 60 * 60 * 24 : 24시간
-  // @Interval(1000 * 5)
-  // async handleProjectStatus() {
-  //   const now = moment(Date.now());
-  //   const projects = await this.projectRepository.find();
-  //   for (const project of projects) {
-  //     if (moment(project.deadline).diff(now) <= 0) {
-  //       project.status = ProjectStatus.FundingEnd;
-  //       await this.projectRepository.save(project);
-  //     } else if (moment(project.fundingOpenDate).diff(now) <= 0) {
-  //       project.status = ProjectStatus.FundingPROGRESS;
-  //       await this.projectRepository.save(project);
-  //     }
-  //   }
-  // }
-
   // todo : 3달이상 지난 알림 지우기
 
   // todo : 입금 완료 시 확인 완료 로직 추가 (금액이 맞는 지, 입금자명, 은행이 일치하는 지 확인할 것)
