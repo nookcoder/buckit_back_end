@@ -28,5 +28,5 @@ export class CreateUserInput {
   role: UserRole;
 
   @ApiProperty({ type: Boolean })
-  termsOfMarketing: string | boolean;
+  termsOfMarketing: boolean;
 }
