@@ -64,7 +64,9 @@ export class AuthService {
       uuid: uuidv4(),
     };
     try {
-      await this.userRepository.save(this.userRepository.create(newUser));
+      this.logger.log(newUser);
+      const user = this.userRepository.create(newUser);
+      await this.userRepository.save(user);
       return {
         ok: true,
       };
