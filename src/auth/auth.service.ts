@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { IMPService } from './imp.service';
+import { create } from 'domain';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +27,8 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) {}
+
+  private readonly logger = new Logger(AuthService.name);
 
   async validateUser(phoneNumber: string, password: string): Promise<any> {
     const user = await this.userRepository.findOne({
@@ -55,19 +59,17 @@ export class AuthService {
   }
 
   async signUp(createUserInput: CreateUserInput): Promise<void | CoreOutput> {
-    const termsOfMarketing: boolean =
-      createUserInput.termsOfMarketing == 'true';
     const newUser = {
       ...createUserInput,
-      termsOfMarketing: termsOfMarketing,
       uuid: uuidv4(),
     };
     try {
-      await this.userRepository.save(await this.userRepository.create(newUser));
+      await this.userRepository.save(this.userRepository.create(newUser));
       return {
         ok: true,
       };
     } catch (e) {
+      this.logger.error(e);
       return {
         ok: false,
         error: e,

@@ -121,7 +121,6 @@ export class AuthController {
   @Get('/certification')
   async certificateByIMP(@Query() query) {
     const { imp_uid, merchant_uid, success } = query;
-    console.log(`${imp_uid}, ${merchant_uid}, ${success}`);
     return await this.authService.certificateByIMP(
       imp_uid,
       merchant_uid,

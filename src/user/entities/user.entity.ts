@@ -26,13 +26,13 @@ export class User extends CoreEntity {
   uuid: string;
 
   // todo : 인증 받아오면 nullable 삭제
-  @Column({ nullable: true, default: 'Lex' })
+  @Column()
   name: string;
 
-  @Column({ nullable: true, default: 'MALE' })
+  @Column()
   gender: string;
 
-  @Column({ nullable: true, default: '1998-05-16' })
+  @Column()
   birth: string;
 
   @Column({ unique: true })
