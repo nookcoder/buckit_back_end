@@ -53,7 +53,7 @@ export class AuthController {
   @ApiBody({ type: CreateUserInput })
   @Post('/sign-up')
   async signUp(
-    @Body() createUserInput: CreateUserInput
+    @Body('body') createUserInput: CreateUserInput
   ): Promise<void | CoreOutput> {
     return await this.authService.signUp(createUserInput);
   }
