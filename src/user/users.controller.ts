@@ -18,7 +18,7 @@ import {
 } from './dto/update-password.dto';
 import { Roles } from '../auth/roles/roles.decorator';
 import { UserCheckQuery } from '../auth/dto/user-check-query.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User API')
 @Controller('api/v1/users')
@@ -83,6 +83,7 @@ export class UsersController {
    * @param input : UpdatePasswordInput
    */
   @Post('/update-password')
+  @ApiBody({ type: UpdatePasswordInput })
   async updatePassword(
     @Body() input: UpdatePasswordInput
   ): Promise<UpdatePasswordOutput> {
@@ -92,8 +93,14 @@ export class UsersController {
     });
   }
 
+  /**
+   *
+   * @param req
+   * @param password
+   */
   @UseGuards(JwtAuthGuard)
   @Post('/update-password/token')
+  @ApiBody({ type: String })
   async updatePasswordWithAccessToken(
     @Request() req,
     @Body('password') password
