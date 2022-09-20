@@ -23,12 +23,15 @@ import { OrderBy, UPLOAD_FIELDS } from './utils/constants';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { CreateFinancialStatementInput } from './dto/create-financial-statement';
+import {ApiOkResponse, ApiParam, ApiTags} from '@nestjs/swagger';
 
+@ApiTags('Project API')
 @Controller('/api/v1/projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Get()
+  @ApiOkResponse({type : Array<Project>})
   async getAllProjects(
     @Query('status') status: ProjectStatus | undefined,
     @Query('page') page: number | undefined,
@@ -43,7 +46,10 @@ export class ProjectController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @ApiParam({
+    name: 'projectId',
+    type : 'number',
+  })
   @Get('/:projectId')
   async getProject(@Param('projectId') id, @Request() req) {
     return await this.projectService.getProject(id, req.user.userId);
@@ -54,6 +60,7 @@ export class ProjectController {
    * @param files
    * @param input
    */
+  // todo : 권한 추가
   @Post('/')
   @UseInterceptors(FileFieldsInterceptor(UPLOAD_FIELDS))
   async createProject(
