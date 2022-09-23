@@ -24,12 +24,15 @@ import { FilesTypeDto } from './dto/files-type.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { CreateFinancialStatementInput } from './dto/create-financial-statement';
 import {ApiOkResponse, ApiParam, ApiTags} from '@nestjs/swagger';
+import {GetProjectWithoutAuthOutput} from "./dto/get-project.dto";
 
 @ApiTags('Project API')
 @Controller('/api/v1/projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
+
+  // todo : 서버에서 마감중/오픈 준비중 계산해서 내려주기
   @Get()
   @ApiOkResponse({type : Array<Project>})
   async getAllProjects(
@@ -45,15 +48,26 @@ export class ProjectController {
       order
     );
   }
+  @ApiParam({
+    name: 'projectId',
+    type: 'number',
+  })
+  @Get('/nu/:projectId')
+  async getProjectWithoutAuth(@Param('projectId') projectId): Promise<GetProjectWithoutAuthOutput>{
+    return await this.projectService.getProjectWithoutAuth(projectId);
+  }
 
   @ApiParam({
     name: 'projectId',
     type : 'number',
   })
+  @UseGuards(JwtAuthGuard)
   @Get('/:projectId')
   async getProject(@Param('projectId') id, @Request() req) {
     return await this.projectService.getProject(id, req.user.userId);
   }
+
+
 
   /**
    * Create a new project
