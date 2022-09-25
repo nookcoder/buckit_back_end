@@ -2,14 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from '../project/entities/project.entity';
 import { User } from '../user/entities/user.entity';
-import { Order } from './entities/order.entity';
-import { OrderDetail } from './entities/order-detail.entity';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
+import { Orders } from './entities/order.entity';
+import { FundingListener } from './listeners/funding.listener';
+import { ShareModule } from '../share/share.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Project, Order, OrderDetail])],
+  imports: [TypeOrmModule.forFeature([User, Project, Orders]), ShareModule],
   controllers: [OrderController],
-  providers: [OrderService],
+  providers: [OrderService, FundingListener],
 })
 export class OrderModule {}

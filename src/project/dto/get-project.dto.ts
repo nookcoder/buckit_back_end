@@ -9,3 +9,7 @@ export class GetProjectOutput extends CoreOutput {
   project?: Project;
   isLike?: boolean;
 }
+
+export class GetProjectWithoutAuthOutput extends CoreOutput {
+  project?: Project;
+}

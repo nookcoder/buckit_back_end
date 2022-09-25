@@ -22,12 +22,19 @@ import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { OrderBy, UPLOAD_FIELDS } from './utils/constants';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { CreateFinancialStatementInput } from './dto/create-financial-statement';
+import {ApiOkResponse, ApiParam, ApiTags} from '@nestjs/swagger';
+import {GetProjectWithoutAuthOutput} from "./dto/get-project.dto";
 
+@ApiTags('Project API')
 @Controller('/api/v1/projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
+
+  // todo : 서버에서 마감중/오픈 준비중 계산해서 내려주기
   @Get()
+  @ApiOkResponse({type : Array<Project>})
   async getAllProjects(
     @Query('status') status: ProjectStatus | undefined,
     @Query('page') page: number | undefined,
@@ -41,18 +48,33 @@ export class ProjectController {
       order
     );
   }
+  @ApiParam({
+    name: 'projectId',
+    type: 'number',
+  })
+  @Get('/nu/:projectId')
+  async getProjectWithoutAuth(@Param('projectId') projectId): Promise<GetProjectWithoutAuthOutput>{
+    return await this.projectService.getProjectWithoutAuth(projectId);
+  }
 
+  @ApiParam({
+    name: 'projectId',
+    type : 'number',
+  })
   @UseGuards(JwtAuthGuard)
   @Get('/:projectId')
   async getProject(@Param('projectId') id, @Request() req) {
     return await this.projectService.getProject(id, req.user.userId);
   }
 
+
+
   /**
    * Create a new project
    * @param files
    * @param input
    */
+  // todo : 권한 추가
   @Post('/')
   @UseInterceptors(FileFieldsInterceptor(UPLOAD_FIELDS))
   async createProject(
@@ -61,6 +83,11 @@ export class ProjectController {
     @Body() input: InputCreateProjectBody
   ) {
     return await this.projectService.createProject(files, input);
+  }
+
+  @Post('/financial-statement')
+  async createFinancialStatement(@Body() input: CreateFinancialStatementInput) {
+    return await this.projectService.createFinancialStatements(input);
   }
 
   /**

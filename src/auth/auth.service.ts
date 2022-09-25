@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { CoreOutput } from '../common/dto/core-output.dto';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { IMPService } from './imp.service';
+import { create } from 'domain';
 
 @Injectable()
 export class AuthService {
@@ -26,11 +28,16 @@ export class AuthService {
     private readonly userRepository: Repository<User>
   ) {}
 
+  private readonly logger = new Logger(AuthService.name);
+
   async validateUser(phoneNumber: string, password: string): Promise<any> {
+    this.logger.warn(phoneNumber + password);
     const user = await this.userRepository.findOne({
-      where: { phoneNumber },
+      where: { phoneNumber: phoneNumber },
       select: ['phoneNumber', 'password', 'id', 'role'],
     });
+    this.logger.warn(`user is ${user}`);
+
     if (user && (await bcrypt.compare(password, user.password))) {
       const { ...result } = user;
       return result;
@@ -55,19 +62,18 @@ export class AuthService {
   }
 
   async signUp(createUserInput: CreateUserInput): Promise<void | CoreOutput> {
-    const termsOfMarketing: boolean =
-      createUserInput.termsOfMarketing == 'true';
     const newUser = {
       ...createUserInput,
-      termsOfMarketing: termsOfMarketing,
       uuid: uuidv4(),
     };
     try {
-      await this.userRepository.save(await this.userRepository.create(newUser));
+      const user = this.userRepository.create(newUser);
+      await this.userRepository.save(user);
       return {
         ok: true,
       };
     } catch (e) {
+      this.logger.error(e);
       return {
         ok: false,
         error: e,
@@ -119,14 +125,14 @@ export class AuthService {
       role,
       phoneNumber
     );
-    await this.updateRefreshToken(userId, refreshToken);
+    // await this.updateRefreshToken(userId, refreshToken);
 
     res.cookie('jwt', accessToken, { httpOnly: true });
-    res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
+    // res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
 
     return {
       access_token: accessToken,
-      refresh_token: refreshToken,
+      // refresh_token: refreshToken,
     };
   }
 

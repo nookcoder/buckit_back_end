@@ -17,7 +17,10 @@ import {
   UpdatePasswordOutput,
 } from './dto/update-password.dto';
 import { Roles } from '../auth/roles/roles.decorator';
+import { UserCheckQuery } from '../auth/dto/user-check-query.dto';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User API')
 @Controller('api/v1/users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
@@ -54,8 +57,14 @@ export class UsersController {
    * 있으면 return true, 없으면 return false,
    * @Query key : phoneNumber, email
    */
+  @ApiOkResponse({
+    type: CheckExistenceOutput,
+    description: '휴대폰 번호, 이메일 통해 DB 에 있는지 조회',
+  })
   @Get('/check')
-  async checkDuplicate(@Query() query): Promise<CheckExistenceOutput> {
+  async checkDuplicate(
+    @Query() query: UserCheckQuery
+  ): Promise<CheckExistenceOutput> {
     const phoneNumber = query['phoneNumber'];
     const email = query['email'];
     if (!phoneNumber && !email) {
@@ -74,6 +83,7 @@ export class UsersController {
    * @param input : UpdatePasswordInput
    */
   @Post('/update-password')
+  @ApiBody({ type: UpdatePasswordInput })
   async updatePassword(
     @Body() input: UpdatePasswordInput
   ): Promise<UpdatePasswordOutput> {
@@ -83,8 +93,14 @@ export class UsersController {
     });
   }
 
+  /**
+   *
+   * @param req
+   * @param password
+   */
   @UseGuards(JwtAuthGuard)
   @Post('/update-password/token')
+  @ApiBody({ type: String })
   async updatePasswordWithAccessToken(
     @Request() req,
     @Body('password') password

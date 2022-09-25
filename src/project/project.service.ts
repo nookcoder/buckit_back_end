@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Project, ProjectStatus } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,7 +8,11 @@ import {
 } from './dto/create-project.dto';
 import { validateDeadlineStringFormat } from './utils/validate';
 import { FORMAT_ERROR, OrderBy } from './utils/constants';
-import { GetAllProjectsOutput, GetProjectOutput } from './dto/get-project.dto';
+import {
+  GetAllProjectsOutput,
+  GetProjectOutput,
+  GetProjectWithoutAuthOutput,
+} from './dto/get-project.dto';
 import {
   UpdateProjectInput,
   UpdateProjectOutput,
@@ -24,6 +28,11 @@ import { InputCreateProjectBody } from './dto/input-create-project-body.dto';
 import { FilesTypeDto } from './dto/files-type.dto';
 import { CategoryRepository } from './repository/category.repository';
 import { Category } from './entities/category.entity';
+import {
+  CreateFinancialStatementInput,
+  CreateFinancialStatementOutput,
+} from './dto/create-financial-statement';
+import { FinancialStatement } from './entities/financial-statements.entity';
 
 @Injectable()
 export class ProjectService {
@@ -32,8 +41,12 @@ export class ProjectService {
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(Category)
     private readonly category: Repository<Category>,
+    @InjectRepository(FinancialStatement)
+    private readonly financialStatementRepository: Repository<FinancialStatement>,
     private readonly categoryRepository: CategoryRepository
   ) {}
+
+  private readonly logger = new Logger(ProjectService.name);
 
   async getAllProjects(
     status: ProjectStatus | undefined,
@@ -78,6 +91,38 @@ export class ProjectService {
       };
     } catch (e) {
       ResponseAndPrintError(e);
+    }
+  }
+
+  async getProjectWithoutAuth(
+    projectId: number
+  ): Promise<GetProjectWithoutAuthOutput> {
+    try {
+      const project = await this.projectRepository.findOne({
+        where: {
+          id: projectId,
+        },
+        relations: ['category'],
+      });
+
+      if (!project) {
+        this.logger.error(`projectId : ${projectId} 가 없습니다.`);
+        return {
+          ok: false,
+          error: '프로젝트를 찾지 못함',
+        };
+      }
+
+      return {
+        ok: true,
+        project: project,
+      };
+    } catch (e) {
+      this.logger.error(e);
+      return {
+        ok: false,
+        error: e,
+      };
     }
   }
 
@@ -155,6 +200,36 @@ export class ProjectService {
     }
   }
 
+  async createFinancialStatements(
+    input: CreateFinancialStatementInput
+  ): Promise<CreateFinancialStatementOutput> {
+    try {
+      const project = await this.projectRepository.findOne({
+        where: { id: input.project_id },
+      });
+      const statementCode = Date.now().toString(16).toUpperCase();
+
+      const { project_id, ...result } = input;
+      const financialStatement = this.financialStatementRepository.create({
+        ...result,
+        statement_code: statementCode,
+      });
+
+      financialStatement.project = project;
+      await this.financialStatementRepository.save(financialStatement);
+
+      return {
+        ok: true,
+        statementCode,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: e,
+      };
+    }
+  }
+
   async updateProject(
     projectId: number,
     input: UpdateProjectInput
@@ -220,6 +295,10 @@ export class ProjectService {
         error: e,
       };
     }
+  }
+
+  async updateProjectWithPartialEntity(projectId: number, partialEntity: any) {
+    return await this.projectRepository.update(projectId, partialEntity);
   }
 
   createDateInstanceForDeadline(deadLine: any): Date | typeof FORMAT_ERROR {
