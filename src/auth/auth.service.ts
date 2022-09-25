@@ -125,14 +125,14 @@ export class AuthService {
       role,
       phoneNumber
     );
-    await this.updateRefreshToken(userId, refreshToken);
+    // await this.updateRefreshToken(userId, refreshToken);
 
     res.cookie('jwt', accessToken, { httpOnly: true });
-    res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
+    // res.cookie('jwt-refresh', refreshToken, { httpOnly: true });
 
     return {
       access_token: accessToken,
-      refresh_token: refreshToken,
+      // refresh_token: refreshToken,
     };
   }
 
