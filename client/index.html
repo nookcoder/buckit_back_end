@@ -10,22 +10,18 @@
     <script !src="">
         const IMP = window.IMP
         IMP.init("imp86307730");
+        window.open('about:blank', '', 'width = 100, height=100');
         // IMP.certification(param, callback) 호출
         IMP.certification({ // param
-            merchant_uid: "12345", // 주문 번호
+            merchant_uid: `mid_${new Date().getTime()}`,
             popup : true // PC환경에서는 popup 파라메터가 무시되고 항상 true 로 적용됨
         }, rsp => { // callback
             if (rsp.success) {
-                console.log(rsp);
-                console.log('success');
             } else {
-                console.log(rsp);
-                console.log('error');
             }
         });
     </script>
 </head>
 <body>
-  <h1>휴대폰 인증</h1>
 </body>
 </html>
