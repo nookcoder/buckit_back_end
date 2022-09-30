@@ -31,13 +31,10 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   async validateUser(phoneNumber: string, password: string): Promise<any> {
-    this.logger.warn(phoneNumber + password);
     const user = await this.userRepository.findOne({
       where: { phoneNumber: phoneNumber },
       select: ['phoneNumber', 'password', 'id', 'role'],
     });
-    this.logger.warn(`user is ${user}`);
-
     if (user && (await bcrypt.compare(password, user.password))) {
       const { ...result } = user;
       return result;
@@ -183,6 +180,17 @@ export class AuthService {
   }
 
   async certificateByIMP(imp_uid: string, merchant_uid, success) {
+    const { birthday, gender, name } = await this.impService.getUserInfoFromImp(
+      imp_uid
+    );
+    return {
+      birthday,
+      gender,
+      name,
+    };
+  }
+
+  async certificateRedirectByIMP(imp_uid: string) {
     const { birthday, gender, name } = await this.impService.getUserInfoFromImp(
       imp_uid
     );
