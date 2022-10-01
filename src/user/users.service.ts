@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
@@ -26,6 +27,7 @@ export class UsersService {
     @InjectRepository(Like)
     private readonly likeRepository: Repository<Like>
   ) {}
+  private readonly logger = new Logger(UsersService.name);
 
   async getAllUser(): Promise<
     User[] | undefined | InternalServerErrorException
@@ -154,5 +156,19 @@ export class UsersService {
     await this.userRepository.update(userId, {
       fcm: fcmToken,
     });
+  }
+
+  async deleteUser(userId: number) {
+    try {
+      await this.userRepository.delete(userId);
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      this.logger.error(err);
+      return {
+        ok: false,
+      };
+    }
   }
 }

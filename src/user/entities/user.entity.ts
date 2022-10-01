@@ -64,11 +64,14 @@ export class User extends CoreEntity {
   points: number;
 
   // 개인 발급 계좌
-  @OneToOne((type) => Account, (account) => account.user)
+  @OneToOne((type) => Account, (account) => account.user, { cascade: true })
   account: Account;
 
   // todo : 좋아요, 주문 정보 추가하기
-  @OneToMany(() => Like, (like) => like.userId, { nullable: true })
+  @OneToMany(() => Like, (like) => like.userId, {
+    nullable: true,
+    cascade: true,
+  })
   likes: Like[];
 
   @Column({ nullable: true, unique: true, select: false })
@@ -87,7 +90,7 @@ export class User extends CoreEntity {
   @OneToMany((type) => Share, (share) => share.shareHolder, {
     cascade: true,
   })
-  shares: [];
+  shares: Share[];
 
   @BeforeInsert()
   @BeforeUpdate()

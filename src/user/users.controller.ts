@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   Post,
@@ -118,5 +119,12 @@ export class UsersController {
     const { userId } = req.user;
     const { fcm } = req.headers;
     return await this.userService.updateFcmToken(userId, fcm);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/')
+  async deleteUser(@Request() req) {
+    const { userId } = req.user;
+    return this.userService.deleteUser(userId);
   }
 }
