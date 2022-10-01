@@ -160,7 +160,13 @@ export class UsersService {
 
   async deleteUser(userId: number) {
     try {
+      const user = await this.userRepository.findOne({
+        where: {
+          id: userId,
+        },
+      });
       await this.userRepository.delete(userId);
+      this.logger.warn(`회원 탈퇴 ${user.phoneNumber} ${user.name}`);
       return {
         ok: true,
       };
