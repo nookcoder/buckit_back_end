@@ -40,7 +40,11 @@ export class OrderService {
         relations: ['orders', 'category'],
       });
 
-      handleErrorOfProject(project, quarter_qty);
+      handleErrorOfProject(project, +quarter_qty);
+
+      if (!userId) {
+        return;
+      }
 
       const user = await this.userRepository.findOne({
         where: {
@@ -49,12 +53,12 @@ export class OrderService {
         relations: ['orders'],
       });
 
-      const orderCode = generateOrderCode(project.category.name, quarter_qty);
+      const orderCode = generateOrderCode(project.category.name, +quarter_qty);
       const newOrder = this.orderRepository.create({
         user: user,
         project: project,
         quarter_price: project.pricePerQuarter,
-        quarter_qty: quarter_qty,
+        quarter_qty: +quarter_qty,
         order_code: orderCode,
         buyer_bank: buyer_bank,
         buyer_name: buyer_name,
@@ -62,7 +66,7 @@ export class OrderService {
 
       // 프로젝트 업데이트
       project.orders.push(newOrder);
-      project.soldQuarter += quarter_qty;
+      project.soldQuarter += +quarter_qty;
       await this.projectRepository.save(project);
 
       // 유저 정보 업데이트
