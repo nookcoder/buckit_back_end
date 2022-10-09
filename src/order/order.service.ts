@@ -10,8 +10,6 @@ import {
   handleErrorOfProject,
 } from '../common/utils/order-utils';
 import { CancelOrderOutput } from './dto/cancel-order.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PaymentSuccessEvent } from './events/payment-success.event';
 
 @Injectable()
 export class OrderService {
@@ -21,9 +19,7 @@ export class OrderService {
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(Orders)
-    private readonly orderRepository: Repository<Orders>,
-
-    private readonly eventEmitter: EventEmitter2
+    private readonly orderRepository: Repository<Orders>
   ) {}
 
   private readonly logger = new Logger(OrderService.name);
@@ -92,22 +88,6 @@ export class OrderService {
     }
   }
 
-  async triggerPaymentSuccess(orderCode: string) {
-    const paymentSuccessEvent = new PaymentSuccessEvent();
-    const user = await this.userRepository.findOne({ where: { id: 2 } });
-    const project = await this.projectRepository.findOne({ where: { id: 1 } });
-
-    paymentSuccessEvent.orderCode = orderCode;
-    paymentSuccessEvent.user = user;
-    paymentSuccessEvent.project = project;
-    paymentSuccessEvent.quarterQty = 10;
-
-    this.eventEmitter.emit('payment.success', paymentSuccessEvent);
-    return {
-      ok: false,
-    };
-  }
-
   async cancelOrder(
     userId: number,
     orderCode: string
@@ -161,6 +141,7 @@ export class OrderService {
       where: {
         order_code: orderCode,
       },
+      relations: ['project', 'user'],
     });
 
     if (!order) {

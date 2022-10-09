@@ -21,21 +21,10 @@ export class FundingListener {
   @OnEvent('payment.success', { async: true })
   async updateOrderStatus(event: PaymentSuccessEvent) {
     try {
-      const orderCode = event.orderCode;
-      const order = await this.orderService.findOrderByOrderCode(orderCode);
-      if (!order) {
-        this.logger.error(`
-        message : "Can't Find Order that order_code is ${orderCode} 
-      `);
-        return {
-          ok: false,
-          error: "Can't Find Order",
-        };
-      }
-
-      await this.orderService.updateOrder(order.id, {
+      await this.orderService.updateOrder(event.order.id, {
         order_status: OrderStatusType.APPROVAL,
       });
+
       // todo : share 생성 로직 추가
       await this.shareService.grantShare(
         event.user,

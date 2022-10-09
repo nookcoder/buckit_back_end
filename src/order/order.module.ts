@@ -12,5 +12,6 @@ import { ShareModule } from '../share/share.module';
   imports: [TypeOrmModule.forFeature([User, Project, Orders]), ShareModule],
   controllers: [OrderController],
   providers: [OrderService, FundingListener],
+  exports: [OrderService],
 })
 export class OrderModule {}

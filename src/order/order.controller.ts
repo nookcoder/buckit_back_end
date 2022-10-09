@@ -51,15 +51,6 @@ export class OrderController {
   }
 
   /**
-   * 결재 확인 API
-   * @param orderCode
-   */
-  @Post('/test/trigger/:order_code')
-  async triggerPaymentSuccess(@Param('order_code') orderCode: string) {
-    return this.orderService.triggerPaymentSuccess(orderCode);
-  }
-
-  /**
    * 주문 취소 API
    * @param req
    * @param order_code
