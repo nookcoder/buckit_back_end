@@ -24,6 +24,12 @@ export class Orders extends CoreEntity {
   @Column()
   total_price: number;
 
+  @Column()
+  buyer_bank: string;
+
+  @Column()
+  buyer_name: string;
+
   // 주문 상태
   @Column({
     type: 'enum',
@@ -43,7 +49,7 @@ export class Orders extends CoreEntity {
   @ManyToOne((type) => Project, (project) => project.orders, {
     onDelete: 'CASCADE',
   })
-  project: number;
+  project: Project;
 
   @RelationId((self: Orders) => self.project)
   project_id: number;

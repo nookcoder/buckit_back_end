@@ -30,7 +30,7 @@ export class OrderService {
 
   async createNewOrder(
     userId: number,
-    { project_id, quarter_qty }: CreateOrderInput
+    { project_id, quarter_qty, buyer_bank, buyer_name }: CreateOrderInput
   ): Promise<CreateOrderOutput> {
     try {
       const project = await this.projectRepository.findOne({
@@ -39,24 +39,8 @@ export class OrderService {
         },
         relations: ['orders', 'category'],
       });
+
       handleErrorOfProject(project, quarter_qty);
-
-      const orderCode = generateOrderCode(project.category.name, quarter_qty);
-      // 새로운 주문 생성
-      const order = await this.orderRepository.save(
-        this.orderRepository.create({
-          user_id: userId,
-          project_id: project_id,
-          quarter_price: project.pricePerQuarter,
-          quarter_qty: quarter_qty,
-          order_code: orderCode,
-        })
-      );
-
-      // 프로젝트 업데이트
-      project.orders.push(order);
-      project.soldQuarter += quarter_qty;
-      await this.projectRepository.save(project);
 
       const user = await this.userRepository.findOne({
         where: {
@@ -64,10 +48,28 @@ export class OrderService {
         },
         relations: ['orders'],
       });
+
+      const orderCode = generateOrderCode(project.category.name, quarter_qty);
+      const newOrder = this.orderRepository.create({
+        user: user,
+        project: project,
+        quarter_price: project.pricePerQuarter,
+        quarter_qty: quarter_qty,
+        order_code: orderCode,
+        buyer_bank: buyer_bank,
+        buyer_name: buyer_name,
+      });
+
+      // 프로젝트 업데이트
+      project.orders.push(newOrder);
+      project.soldQuarter += quarter_qty;
+      await this.projectRepository.save(project);
+
       // 유저 정보 업데이트
-      user.orders.push(order);
+      user.orders.push(newOrder);
       await this.userRepository.save(user);
 
+      await this.orderRepository.save(newOrder);
       return {
         ok: true,
         order_code: orderCode,
