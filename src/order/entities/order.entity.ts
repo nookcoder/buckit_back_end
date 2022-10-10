@@ -56,6 +56,8 @@ export class Orders extends CoreEntity {
 
   @BeforeInsert()
   calculateTotalPrice() {
-    this.total_price = this.quarter_qty * this.quarter_price;
+    this.total_price = Math.round(
+      this.quarter_qty * this.quarter_price * 1.033
+    );
   }
 }

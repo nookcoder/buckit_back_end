@@ -2,8 +2,11 @@ import axios from 'axios';
 import { Orders } from '../../order/entities/order.entity';
 import { getEndTimeFormat } from '../../common/utils/parser';
 import { Share } from '../../share/entities/share.entity';
+import { Logger } from '@nestjs/common';
 
 const { WebClient, LogLevel } = require('@slack/web-api');
+
+const logger = new Logger('SLACK');
 
 const client = new WebClient(`${process.env.SLACK_TOKEN}`, {
   // LogLevel can be imported and used to make debugging simpler
@@ -33,6 +36,7 @@ export const sendToSlack = async (order: Orders) => {
       }
     );
   } catch (e) {
+    logger.error(e);
     console.log(e);
   }
 };
@@ -65,6 +69,7 @@ export const sendPaymentCompletionToSlack = async (
       }
     );
   } catch (e) {
+    logger.error(e);
     console.log(e);
   }
 };
