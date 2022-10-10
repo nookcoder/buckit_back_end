@@ -53,7 +53,7 @@ export class ShareService {
       });
       share.shareHolder = user;
       share.project = project;
-      await this.shareRepository.save(share);
+      return await this.shareRepository.save(share);
     } catch (error) {
       this.logger.error(error);
     }
