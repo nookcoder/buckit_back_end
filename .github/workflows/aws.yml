@@ -31,12 +31,12 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: buckit-test           # set this to your Amazon ECR repository name
-  ECS_SERVICE: buckit-test-service                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: buckit-test-cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: buckit-test-td  # set this to the path to your Amazon ECS task definition
-  CONTAINER_NAME: buckit-test-container           # set this to the name of the container in the
-
+  ECR_REPOSITORY: buckit-prod           # set this to your Amazon ECR repository name
+  ECS_SERVICE: buckit-prod-service                 # set this to your Amazon ECS service name
+  ECS_CLUSTER: buckit-prod-cluster                 # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: buckit-prod  # set this to the path to your Amazon ECS task definition
+  CONTAINER_NAME: buckit-prod           # set this to the name of the container in the
+  
 permissions:
   contents: read
 
