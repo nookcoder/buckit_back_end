@@ -21,9 +21,11 @@ export const sendToSlack = async (order: Orders) => {
         channel: `${process.env.SLACK_ORDER_CHANNEL}`,
         text: `입금자명 : ${order.buyer_name}\n입금은행 : ${
           order.buyer_bank
-        }\n주문한 총 블럭 수 : ${order.quarter_qty}\n주문한 총 금액 : ${
-          order.quarter_qty * order.project.pricePerQuarter
-        }\n주문 마감 기한 : ${getEndTimeFormat(
+        }\n주문한 총 블럭 수 : ${
+          order.quarter_qty
+        }\n주문한 총 금액 : ${Math.round(
+          order.quarter_qty * order.project.pricePerQuarter * 1.033
+        )}\n주문 마감 기한 : ${getEndTimeFormat(
           order.createdAt.toString()
         )}\n주문 코드 : ${order.order_code}
         `,
@@ -52,9 +54,9 @@ export const sendPaymentCompletionToSlack = async (
         channel: `${process.env.SLACK_PAYMENT_CHANNEL}`,
         text: `결제가 성공적으로 승인되었습니다.\n주문코드:${
           order.order_code
-        }\n총 결제금액:${
-          share.total_share_number * share.project.pricePerQuarter
-        }\n총 블럭 수:${share.total_share_number}\n프로젝트 소유자 명:${
+        }\n총 결제금액:${Math.round(
+          share.total_share_number * share.project.pricePerQuarter * 1.033
+        )}\n총 블럭 수:${share.total_share_number}\n프로젝트 소유자 명:${
           share.shareHolder.name
         }\n이메일:${share.shareHolder.email}\n전화번호:${
           share.shareHolder.phoneNumber

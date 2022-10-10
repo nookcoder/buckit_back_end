@@ -79,7 +79,7 @@ export class OrderService {
       await sendRequestDepositMessage(
         user.phoneNumber,
         user.name,
-        +project.pricePerQuarter * +quarter_qty
+        Math.round(+project.pricePerQuarter * +quarter_qty * 1.033)
       );
       return {
         ok: true,
