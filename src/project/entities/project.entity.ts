@@ -103,7 +103,7 @@ export class Project extends CoreEntity {
 
   @BeforeInsert()
   async calculateQuarter() {
-    this.totalQuarter = this.total / this.pricePerQuarter;
+    this.totalQuarter = Math.round(this.total / this.pricePerQuarter);
   }
 
   async updateTotalQuarter(quarterQtyOrdered: number): Promise<number> {
