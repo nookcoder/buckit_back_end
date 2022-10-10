@@ -4,7 +4,7 @@ import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Project } from '../project/entities/project.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create_order.dto';
-import { Orders } from './entities/order.entity';
+import { Orders, OrderStatusType } from './entities/order.entity';
 import {
   generateOrderCode,
   handleErrorOfProject,
@@ -128,6 +128,28 @@ export class OrderService {
         ok: false,
         error: err,
       };
+    }
+  }
+
+  async getMyOrders(userId: number) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      const orders = await this.orderRepository.find({
+        where: {
+          order_status: OrderStatusType.PENDING,
+          user: {
+            id: userId,
+          },
+        },
+        relations: ['project', 'user'],
+      });
+      return orders;
+    } catch (e) {
+      this.logger.error(e);
     }
   }
 

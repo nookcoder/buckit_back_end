@@ -6,9 +6,9 @@ import {
   Body,
   Get,
   Delete,
-  Param,
   HttpCode,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { OrderService } from './order.service';
@@ -64,6 +64,13 @@ export class OrderController {
 
   @Get('/all')
   async getAllOrders() {}
+
+  @Get('/before-payment')
+  @UseGuards(JwtAuthGuard)
+  async getMyOrders(@Req() req) {
+    const { userId } = req.user;
+    return await this.orderService.getMyOrders(userId);
+  }
 
   @Get('/:orderCode')
   async getOrder() {}
