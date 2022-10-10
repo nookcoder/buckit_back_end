@@ -19,7 +19,7 @@ export class ShareService {
 
   private readonly logger = new Logger(ShareService.name);
 
-  async getMyShare(userId: number) {
+  async getMyShares(userId: number) {
     const shares = await this.shareRepository.find({
       where: {
         shareHolder: {
@@ -30,6 +30,20 @@ export class ShareService {
     });
 
     return shares;
+  }
+
+  async getMyShare(userId, shareId) {
+    const share = await this.shareRepository.findOne({
+      where: {
+        shareHolder: {
+          id: userId,
+        },
+        id: shareId,
+      },
+      relations: ['project', 'project.category', 'dividends'],
+    });
+
+    return share;
   }
 
   async grantShare(user: User, project: Project, shareNumber: number) {
