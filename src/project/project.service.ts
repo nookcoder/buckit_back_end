@@ -196,6 +196,7 @@ export class ProjectService {
         ok: true,
       };
     } catch (e) {
+      this.logger.error(e);
       return { ok: false, error: e };
     }
   }
