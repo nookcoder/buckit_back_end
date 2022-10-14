@@ -2,9 +2,9 @@ export function getTimeFormat(time: string) {
   const createdTime = new Date(time);
   const year = createdTime.getFullYear();
   const month =
-    createdTime.getMonth() < 10
-      ? `0${createdTime.getMonth()}`
-      : createdTime.getMonth();
+    createdTime.getMonth() + 1 < 10
+      ? `0${createdTime.getMonth() + 1}`
+      : createdTime.getMonth() + 1;
   const date =
     createdTime.getDate() < 10
       ? `0${createdTime.getDate()}`

@@ -10,10 +10,7 @@ import {
   handleErrorOfProject,
 } from '../common/utils/order-utils';
 import { CancelOrderOutput } from './dto/cancel-order.dto';
-import {
-  sendRequestDepositAligoTemplate,
-  sendRequestDepositMessage,
-} from '../modules/aligo';
+import { sendRequestDepositAligoTemplate } from '../modules/aligo';
 import { sendToSlack } from '../modules/slack';
 
 @Injectable()
@@ -75,12 +72,12 @@ export class OrderService {
       await this.userRepository.save(user);
 
       await this.orderRepository.save(newOrder);
-      await sendToSlack(newOrder);
-      await sendRequestDepositMessage(
-        user.phoneNumber,
+      await sendRequestDepositAligoTemplate(
         user.name,
-        Math.round(+project.pricePerQuarter * +quarter_qty * 1.033)
+        Math.round(+project.pricePerQuarter * +quarter_qty * 1.033),
+        user.phoneNumber
       );
+      await sendToSlack(newOrder);
       return {
         ok: true,
         order_code: orderCode,

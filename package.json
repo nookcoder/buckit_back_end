@@ -44,6 +44,7 @@
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "firebase-admin": "^11.0.1",
+    "form-data": "^4.0.0",
     "iamport-rest-client-nodejs": "^0.9.11",
     "joi": "^17.6.0",
     "moment": "^2.29.4",

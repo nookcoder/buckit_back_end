@@ -1,23 +1,20 @@
 import * as aligoapi from 'aligoapi';
 import axios from 'axios';
 import { Logger } from '@nestjs/common';
-import { create } from 'domain';
+import * as FormData from 'form-data';
+import {
+  completionDepositTemplate,
+  completionDepositTemplateWhenFail,
+  requestDepositTemplate,
+  talkButtonInfo,
+  talkCompletionButtonInfo,
+} from './templates/kakao';
 
-const HOST = 'https://kakaoapi.aligo.in:443';
-const AUTH = '/akv10/token/create/30/s';
-const SEND_TEMPLATE = '/akv10/alimtalk/send';
 const REQUEST_TEMPLATE = 'TK_2145';
 const COMPLETION_TEMPLATE = 'TK_2445';
 
 const MESSAGE_HOST = 'https://apis.aligo.in:443';
 const SEND_MESSAGE = '/send';
-
-interface getAligoapiTokenResponse {
-  code: number;
-  message: string;
-  token: string;
-  urlencode: string;
-}
 
 const sendMessageContent = (total: number) => {
   return `(주)버닝서프라이즈 블럭 구매 입금 요청 안내
@@ -56,7 +53,21 @@ const sendCompletionMessage = (
 
 const logger = new Logger('Aligo');
 
-const getAligoapiToken = async () => {
+interface getAligoapiTokenResponse {
+  code: number;
+  message: string;
+  token: string;
+  urlencode: string;
+}
+
+const HOST = 'https://kakaoapi.aligo.in:443';
+const AUTH = '/akv10/token/create/30/s';
+const SEND_TEMPLATE = '/akv10/alimtalk/send/';
+
+/**
+ * API 호출을 위한 토큰 생성
+ */
+export const getAligoapiToken = async () => {
   try {
     const url = `${HOST}${AUTH}?apikey=${process.env.ALIGO_API}&userid=${process.env.ALIGO_ID}`;
     const response = await axios.get(url);
@@ -67,63 +78,87 @@ const getAligoapiToken = async () => {
   }
 };
 
-export const sendRequestDepositAligoTemplate = async () => {
-  try {
-    const { token } = await getAligoapiToken();
-    console.log(token);
-    const url = `${HOST}${SEND_TEMPLATE}?apikey=${
-      process.env.ALIGO_API
-    }&userid=${process.env.ALIGO_ID}&token=${token}&senderkey=${
-      process.env.ALIGO_SENDER_KEY
-    }&tpl_code=${REQUEST_TEMPLATE}&sender=01050460649&receiver_1=01050477361&recvname_1=${encodeURI(
-      '김현욱'
-    )}`;
-    const response = await axios.post(url);
-    console.log(response.data);
-  } catch (e) {
-    logger.error(e);
-  }
-};
-
-export const sendRequestDepositMessage = async (
-  phoneNumber: string,
+export const sendRequestDepositAligoTemplate = async (
   name: string,
-  total: number
+  total: number,
+  phoneNumber: string
 ) => {
   try {
-    const url = `${MESSAGE_HOST}${SEND_MESSAGE}?key=${
-      process.env.ALIGO_API
-    }&user_id=${
-      process.env.ALIGO_ID
-    }&sender=01050460649&receiver=${phoneNumber}&msg=${sendMessageContent(
-      total
-    )}&destination=${phoneNumber}|${name}`;
-    const encoded = encodeURI(url);
-    await axios.post(encoded);
+    const { token, urlencode } = await getAligoapiToken();
+
+    const form = new FormData();
+    form.append('apikey', process.env.ALIGO_API);
+    form.append('senderkey', process.env.ALIGO_SENDER_KEY);
+    form.append('userid', process.env.ALIGO_ID);
+    form.append('token', urlencode);
+    form.append('tpl_code', REQUEST_TEMPLATE);
+    form.append('sender', '01050460649');
+    form.append('receiver_1', phoneNumber);
+    form.append('subject_1', '입금요청');
+    form.append('message_1', requestDepositTemplate(name, total));
+    form.append('button_1', talkButtonInfo());
+    form.append('failover', 'Y');
+    form.append('fsubject_1', '입금요청');
+    form.append('fmessage_1', requestDepositTemplate(name, total));
+    form.append('testMode', 'N');
+
+    const response = await axios.post(
+      encodeURI(`${HOST}${SEND_TEMPLATE}`),
+      form,
+      {
+        headers: {
+          'Content-Type': 'mutipart/form-data',
+        },
+      }
+    );
+    console.log(response);
   } catch (e) {
     logger.error(e);
   }
 };
 
-export const sendCompletionDeposiMessage = async (
-  phoneNumber: string,
+export const sendCompletionDepositAligoTemplate = async (
   name: string,
   total: number,
   createdAt: string,
-  quarter: number
+  quarter: number,
+  phoneNumber: string
 ) => {
   try {
-    const url = `${MESSAGE_HOST}${SEND_MESSAGE}?key=${
-      process.env.ALIGO_API
-    }&user_id=${
-      process.env.ALIGO_ID
-    }&sender=01050460649&receiver=${phoneNumber}&msg=${sendCompletionMessage(
-      quarter,
-      total,
-      createdAt
-    )}&destination=${phoneNumber}|${name}`;
-    const encoded = encodeURI(url);
-    await axios.post(encoded);
+    const { token, urlencode } = await getAligoapiToken();
+
+    const form = new FormData();
+    form.append('apikey', process.env.ALIGO_API);
+    form.append('senderkey', process.env.ALIGO_SENDER_KEY);
+    form.append('userid', process.env.ALIGO_ID);
+    form.append('token', urlencode);
+    form.append('tpl_code', COMPLETION_TEMPLATE);
+    form.append('sender', '01050460649');
+    form.append('receiver_1', phoneNumber);
+    form.append('subject_1', '입금완료');
+    form.append(
+      'message_1',
+      completionDepositTemplate(name, total, createdAt, quarter)
+    );
+    form.append('button_1', talkCompletionButtonInfo());
+    form.append('failover', 'Y');
+    form.append('fsubject_1', '입금완료');
+    form.append(
+      'fmessage_1',
+      completionDepositTemplateWhenFail(name, total, createdAt, quarter)
+    );
+    form.append('testMode', 'N');
+
+    const response = await axios.post(
+      encodeURI(`${HOST}${SEND_TEMPLATE}`),
+      form,
+      {
+        headers: {
+          'Content-Type': 'mutipart/form-data',
+        },
+      }
+    );
+    console.log(response);
   } catch (e) {
     logger.error(e);
   }

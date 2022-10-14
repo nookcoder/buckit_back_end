@@ -4,7 +4,7 @@ import { PaymentSuccessEvent } from '../events/payment-success.event';
 import { OrderService } from '../order.service';
 import { OrderStatusType } from '../entities/order.entity';
 import { ShareService } from '../../share/share.service';
-import { sendCompletionDeposiMessage } from '../../modules/aligo';
+import { sendCompletionDepositAligoTemplate } from '../../modules/aligo';
 import { getTimeFormat } from '../../common/utils/parser';
 import { sendPaymentCompletionToSlack } from '../../modules/slack';
 
@@ -34,13 +34,13 @@ export class FundingListener {
         event.project,
         event.quarterQty
       );
-      // todo : 결재완료 알림을 여기서 하면 될까요???
-      await sendCompletionDeposiMessage(
-        event.user.phoneNumber,
+
+      await sendCompletionDepositAligoTemplate(
         event.user.name,
         event.order.total_price,
         getTimeFormat(newShare.createdAt.toString()),
-        newShare.total_share_number
+        newShare.total_share_number,
+        event.user.phoneNumber
       );
       await sendPaymentCompletionToSlack(event.order, newShare);
     } catch (error) {
