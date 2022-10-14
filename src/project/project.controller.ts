@@ -85,11 +85,6 @@ export class ProjectController {
     return await this.projectService.createProject(files, input);
   }
 
-  @Post('/financial-statement')
-  async createFinancialStatement(@Body() input: CreateFinancialStatementInput) {
-    return await this.projectService.createFinancialStatements(input);
-  }
-
   /**
    * Project 정보 및 상태 업데이트
    * @param projectId
